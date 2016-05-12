@@ -1,0 +1,19 @@
+{
+  "name": "fs-angular-validate", 
+  "description": "",
+  "main": [
+    "dist/validate.js"
+  ],
+  "dependencies": [
+    "angular-messages": "1.5.6-build.4794+sha.f1f892d",
+  ]
+  "authors": [
+    "Firestitch Inc."
+  ],
+  "license": "MIT",
+  "ignore": [
+    "src",
+    ".gitignore"
+  ],
+  "private": false
+}
