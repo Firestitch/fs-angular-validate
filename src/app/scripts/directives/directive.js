@@ -156,7 +156,7 @@
                                 
                                     messages.push('<ng-message when="custom"></ng-message>');
 
-                                    var custom = angular.bind(this, function(input, element, $scope, value) {                                                                     
+                                    var custom = angular.bind(this, function(input, element, $scope, value) {
                                                                             
                                                                             if(input.attr('type')=='num') {
                                                                                 if(value===undefined) {

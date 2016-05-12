@@ -1,6 +1,6 @@
 {
-  "name": "fs-angular-angular",
-  "namespace": "angular",
+  "name": "fs-angular-validate",
+  "namespace": "validate",
   "port": "5010",   
   "moduleName": "app",
   "version": "0.0.0",
