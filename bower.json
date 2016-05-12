@@ -4,9 +4,9 @@
   "main": [
     "dist/validate.js"
   ],
-  "dependencies": [
-    "angular-messages": "1.5.6-build.4794+sha.f1f892d",
-  ]
+  "dependencies": {
+    "angular-messages": "1.5.6-build.4794+sha.f1f892d"
+  },
   "authors": [
     "Firestitch Inc."
   ],
