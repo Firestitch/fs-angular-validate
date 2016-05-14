@@ -24,7 +24,7 @@
 
                 angular.forEach(tElem.find('md-input-container'),function(container) {
                     var container = angular.element(container);
-                    var input = container.find('input');
+                    var input = container.find('input,textarea');
 
                     if(!input.attr('name')) {
                         input.attr('name','input_' + guid());
@@ -74,7 +74,7 @@
                         angular.forEach(element.find('md-input-container'),function(container) {
 
                             var container = angular.element(container);
-                            var input = container.find('input');
+                            var input = container.find('input,textarea');
 
                             if(input.length) {
 
