@@ -1,0 +1,3 @@
+form[fs-validate] md-input-container ng-message {
+	transition: 0s !important;
+}

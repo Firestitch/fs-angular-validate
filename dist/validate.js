@@ -24,7 +24,7 @@
 
                 angular.forEach(tElem.find('md-input-container'),function(container) {
                     var container = angular.element(container);
-                    var input = container.find('input,textarea');
+                    var input = angular.element(container[0].querySelectorAll('input,textarea'));
 
                     if(!input.attr('name')) {
                         input.attr('name','input_' + guid());
@@ -73,9 +73,8 @@
                         $scope.inputs = {};
                         angular.forEach(element.find('md-input-container'),function(container) {
 
-                            var container = angular.element(container);
-                            var input = container.find('input,textarea');
-
+                            var input = angular.element(container.querySelectorAll('input,textarea'));
+                          
                             if(input.length) {
 
                                 var name = input.attr('name');
@@ -230,14 +229,7 @@
                                     messages.push('<ng-message when="max">' + message + '</ng-message>');
                                 }
 
-
-                                //range - Enter a number between x and y
-
                                 if(messages.length)  {
-
-                                    angular.forEach(messages,function(message) {
-                                        $animate.enabled(false,message);
-                                    });
 
                                     $scope.$watch('controller.' + name,function(value) {
                                         $scope.inputs[name] = value;
@@ -245,7 +237,7 @@
 
                                     var ngmessages = angular.element('<ng-messages name="' + name + '" md-auto-hide="false" ng-show="submitted || inputs[\'' + name + '\'].$touched" for="inputs[\'' + name + '\'].$error">' + messages.join('') + '</ng-messages>');
 
-                                    container.append(ngmessages);
+                                    angular.element(container).append(ngmessages);
                                     $compile(ngmessages)($scope);
                                 }
                             }

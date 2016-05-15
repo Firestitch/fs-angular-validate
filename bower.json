@@ -2,7 +2,8 @@
   "name": "fs-angular-validate", 
   "description": "",
   "main": [
-    "dist/validate.js"
+    "dist/validate.js",
+    "dist/validate.css"
   ],
   "dependencies": {
     "angular-messages": "1.5.6-build.4794+sha.f1f892d"
