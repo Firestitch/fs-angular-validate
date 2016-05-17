@@ -228,7 +228,18 @@
 
                                     messages.push('<ng-message when="max">' + message + '</ng-message>');
                                 }
+                                
+                                if(input.attr('compare')!==undefined) {
+                                    var message = input.attr('compare-message') || 'Mismatched value';
 
+                                    validators.compare = angular.bind(this, function(compareto, value) {
+                                                                                var compare = $scope.$parent.$eval(compareto);
+                                                                                return compare===value;
+                                                                            },input.attr('compare'));
+
+                                    messages.push('<ng-message when="compare">' + message + '</ng-message>');
+                                }
+                                
                                 if(messages.length)  {
 
                                     $scope.$watch('controller.' + name,function(value) {
