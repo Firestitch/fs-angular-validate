@@ -5,7 +5,8 @@ angular
     'config',
     'ui.router',
     'ngMaterial',
-    'fs-angular-validate'
+    'fs-angular-validate',
+    'fs-angular-lister'
 ])
 .config(function ($stateProvider, $urlRouterProvider) {
 

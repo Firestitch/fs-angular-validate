@@ -1,3 +1,28 @@
 form[fs-validate] md-input-container ng-message {
 	transition: 0s !important;
 }
+
+md-datepicker-container input {
+	border-color: rgb(221,44,0);
+}
+
+md-datepicker-container ng-messages {
+	position: absolute;
+    -webkit-order: 4;
+    -ms-flex-order: 4;
+    order: 4;
+    overflow: hidden;
+    clear: left;
+}
+
+md-datepicker-container ng-message {
+    font-size: 12px;
+    line-height: 14px;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+    opacity: 1;
+    margin-top: 0;
+    padding-top: 5px;
+    color: rgb(221,44,0);
+    display: block;
+}
