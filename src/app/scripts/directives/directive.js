@@ -113,7 +113,11 @@
                                         input.attr('name',name);                                    
                                     }
 
-                                    var validators = $scope.controller[name].$validators;
+                                    var validators = [];
+                                    
+                                    if($scope.controller.hasOwnProperty(name)) {
+                                        validators = $scope.controller[name].$validators;
+                                    }
 
                                     if(input.attr('required')!==undefined) {
 
