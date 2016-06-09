@@ -125,7 +125,7 @@
 
                                     if(input.attr('minlength')!==undefined) {
 
-                                        var message = input.attr('minlength-message') || 'The value must be at least ' + input.attr('minlength') + ' charaters';
+                                        var message = input.attr('minlength-message') || 'The value must be at least ' + input.attr('minlength') + ' characters';
 
                                         validators.minlength = angular.bind(this, function(length, value) {
                                                                                         return isEmpty(value) || String(value).length>=parseInt(length);
