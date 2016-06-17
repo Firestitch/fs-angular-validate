@@ -42,48 +42,66 @@
 
                 return {
 
-                    pre: function($scope, element, attrs, controller) {
+                    pre: function($scope, element, attrs, form) {
                     
-                        $scope.controller = controller;
-                        $scope.instance = { form: controller,
+                        $scope.form = form;
+                        $scope.instance = { form: form,
                                             validate: function() {
 
-                                                angular.forEach(controller.$error, function(error) {
+                                                angular.forEach(form.$error, function(error) {
                                                     angular.forEach(error, function(field) {
                                                         field.$setDirty();
                                                         field.$setTouched();
                                                     });
                                                 });
 
-                                                return controller.$valid;
+                                                return form.$valid;
 
                                             }};
 
                         var element = angular.element(element);
                         element.on("submit", function(event) {
 
-                            if(!controller.$valid) {
+                            var validations = [];
+                            angular.forEach(form,function(controller) {
+
+                                if(controller && controller.$asyncValidators && controller.$asyncValidators['custom-submit']) {
                                 
-                                 var el = angular.element(element[0].querySelector('.ng-invalid'))[0];
+                                    angular.forEach(controller.$asyncValidators,function(validator) {
+                                        validations.push(validator(controller.$viewValue,controller.$viewValue,true)
+                                                            .then(function() {                                                                
+                                                                controller.$setValidity('custom-submit', true);
+                                                            },function() {
+                                                                controller.$setValidity('custom-submit', false);
+                                                            }));
+                                    });
+                                }
+                            });
 
-                                 if(el) {
-                                    el.focus();
-                                 }
+                            $q.all(validations)
+                            .then(function() {
 
-                                return;
-                            }
+                                if(form.$valid) {
+                                    
+                                     var el = angular.element(element[0].querySelector('.ng-invalid'))[0];
 
-                            if($scope.onsubmit) {
-                                 $scope.$parent.$eval($scope.onsubmit);
-                            }
-              
+                                     if(el) {
+                                        el.focus();
+                                     }
+
+                                    if($scope.onsubmit) {
+                                         $scope.$parent.$eval($scope.onsubmit);
+                                    }
+                                }
+                            });
+
                         }).attr('novalidate','novalidate');
 
                         if($scope.autocomplete===undefined) {
                             element.attr('autocomplete','off');
                         }
                         
-                        $scope.$watch('controller.$submitted',function(value) {
+                        $scope.$watch('form.$submitted',function(value) {
                             $scope.submitted = value;
                         },true);
 
@@ -114,7 +132,13 @@
                                         input.attr('name',name);                                    
                                     }
 
-                                    var validators = $scope.controller[name].$validators;
+                                    var controller = $scope.form[name];
+
+                                    if(!controller) {
+                                        return;
+                                    }
+
+                                    var validators = controller.$validators;
 
                                     if(input.attr('required')!==undefined) {
 
@@ -185,60 +209,72 @@
                                             return isEmpty(value) || !String(value).length || valid
                                         }
                                     }
+                                        
+                                    angular.forEach(['custom','custom-submit'],function(type) {
 
-                                    if(input.attr('custom')!==undefined) {
-                                    
-                                        messages.push('<ng-message when="custom"></ng-message>');
+                                        if(input.attr(type)===undefined) {
+                                            return;
+                                        }
 
-                                        var custom = angular.bind(this, function(input, element, $scope, value) {
-                                                                                
-                                                                                if(input.attr('type')=='num') {
-                                                                                    if(value===undefined) {
-                                                                                        value = null;
-                                                                                    }
-                                                                                } else {
-                                                                                    if(value===undefined || value===null) {
-                                                                                        value = '';
-                                                                                    }
-                                                                                }
+                                        messages.push('<ng-message when="' + type + '"></ng-message>');
 
-                                                                                var func = $scope.$parent.$eval(input.attr('custom'));
-                                                                                var promise = func(value);
-                                                                                var defer = $q.defer();
-                                                                                var updateMessage = function(message) {
-                                                                                            setTimeout(function() {
-                                                                                                message = message || input.attr('custom-message');
-                                                                                                var el = angular.element(element[0].querySelector('ng-messages[name=\'' + input.attr('name') + '\'] ng-message[when=\'custom\']'));
-                                                                                                el.text(message);
-                                                                                            });
-                                                                                }
+                                        var custom = angular.bind(this,
+                                            function(input, element, $scope, type, value, oldValue, submitting) {
+                                                
+                                                if(input.attr('type')=='num') {
+                                                    if(value===undefined) {
+                                                        value = null;
+                                                    }
+                                                } else {
+                                                    if(value===undefined || value===null) {
+                                                        value = '';
+                                                    }
+                                                }
 
-                                                                                if(angular.isObject(promise) && promise.catch) {
+                                                var defer = $q.defer();
 
-                                                                                        promise
-                                                                                        .then(function() {
-                                                                                            defer.resolve();
-                                                                                        })
-                                                                                        .catch(function(message) {
+                                                if(type=='custom-submit' && !submitting) {
+                                                    defer.resolve();
+                                                    return defer.promise;
+                                                }
 
-                                                                                            defer.reject();
-                                                                                            updateMessage(message);
+                                                var func = $scope.$parent.$eval(input.attr(type));
+                                                var promise = func(value);
 
-                                                                                        });
-                                                                                } else {
-                                                                                   if(promise===true) {
-                                                                                        defer.resolve();
-                                                                                   } else {
-                                                                                        defer.reject(promise);
-                                                                                        updateMessage(promise);
-                                                                                   }
-                                                                                }
+                                                var updateMessage = function(message) {
+                                                    setTimeout(function() {
+                                                        message = message || input.attr('custom-message');
+                                                        var el = angular.element(element[0].querySelector('ng-messages[name=\'' + input.attr('name') + '\'] ng-message[when=\'' + type + '\']'));
+                                                        el.text(message);
+                                                    });
+                                                }
 
-                                                                                return defer.promise;
-                                                                        },input, element, $scope);
+                                                if(angular.isObject(promise) && promise.catch) {
 
-                                        $scope.controller[name].$asyncValidators.custom = custom;
-                                    }
+                                                        promise
+                                                        .then(function() {
+                                                            defer.resolve();
+                                                        })
+                                                        .catch(function(message) {
+
+                                                            defer.reject();
+                                                            updateMessage(message);
+
+                                                        });
+                                                } else {
+                                                   if(promise===true) {
+                                                        defer.resolve();
+                                                   } else {
+                                                        defer.reject(promise);
+                                                        updateMessage(promise);
+                                                   }
+                                                }
+
+                                                return defer.promise;
+                                        },input, element, $scope, type);
+                                 
+                                        $scope.form[name].$asyncValidators[type] = custom;
+                                    });
 
 
                                     if(input.attr('min')!==undefined) {
@@ -276,7 +312,7 @@
                                     
                                     if(messages.length)  {
 
-                                        $scope.$watch('controller.' + name,function(value) {
+                                        $scope.$watch('form.' + name,function(value) {
                                             $scope.inputs[name] = value;
                                         },true);
 

@@ -56,6 +56,11 @@
     </md-input-container>
 
     <md-input-container class="md-block">
+        <label>Asynchronous Custom Submit</label>
+        <input type="text" ng-model="user.asynccustomsubmit" custom-submit="asyncCustomSubmit"/>
+    </md-input-container>  
+
+    <md-input-container class="md-block">
         <label>Required Textarea</label>
         <textarea ng-model="user.requiredtextarea" required></textarea>
     </md-input-container>
@@ -73,8 +78,6 @@
     </div>
 
     <fs-lister ls-options="listerConf" ls-instance="listerInstance"></fs-lister>
-
-
 
 
     <div class="button-toolbar" layout="row" layout-align="end center">

@@ -4,7 +4,18 @@
 angular.module('app')
   .controller('DemoCtrl', function ($scope, $q) {
 
-    	$scope.user = { phone: '' };
+    $scope.user = { phone: '' };
+
+    $scope.asyncCustomSubmit = function() {
+        var defer = $q.defer();
+
+        if($scope.user.asynccustomsubmit=='123123')
+            defer.resolve();
+        else
+            defer.reject("The the value for Asynchronous Custom Submit is not equal to 123123");
+
+        return defer.promise;
+    }
 
 
     $scope.listerConf = {
