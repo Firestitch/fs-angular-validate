@@ -218,8 +218,16 @@
                                         messages.push('<ng-message when="' + type + '"></ng-message>');
 
                                         var custom = angular.bind(this,
-                                            function(input, element, $scope, type, value, oldValue, submitting) {
-                                                
+                                            function(input, element, $scope, type, value, oldValue, submitting) {                                                
+
+                                                var updateMessage = function(message) {
+                                                    setTimeout(function() {
+                                                        message = message || input.attr('custom-message');
+                                                        var el = angular.element(element[0].querySelector('ng-messages[name=\'' + input.attr('name') + '\'] ng-message[when=\'' + type + '\']'));
+                                                        el.text(message);
+                                                    });
+                                                }
+
                                                 if(input.attr('type')=='num') {
                                                     if(value===undefined) {
                                                         value = null;
@@ -237,35 +245,30 @@
                                                     return defer.promise;
                                                 }
 
-                                                var func = $scope.$parent.$eval(input.attr(type));
-                                                var promise = func(value);
+                                                var result = $scope.$parent.$eval(input.attr(type));
 
-                                                var updateMessage = function(message) {
-                                                    setTimeout(function() {
-                                                        message = message || input.attr('custom-message');
-                                                        var el = angular.element(element[0].querySelector('ng-messages[name=\'' + input.attr('name') + '\'] ng-message[when=\'' + type + '\']'));
-                                                        el.text(message);
-                                                    });
+                                                if(angular.isFunction(result)) {
+                                                    result = result(value);
                                                 }
 
-                                                if(angular.isObject(promise) && promise.catch) {
+                                                if(angular.isObject(result) && result.catch) {
 
-                                                        promise
-                                                        .then(function() {
-                                                            defer.resolve();
-                                                        })
-                                                        .catch(function(message) {
+                                                    result
+                                                    .then(function() {
+                                                        defer.resolve();
+                                                    })
+                                                    .catch(function(message) {
 
-                                                            defer.reject();
-                                                            updateMessage(message);
+                                                        defer.reject();
+                                                        updateMessage(message);
 
-                                                        });
+                                                    });
                                                 } else {
-                                                   if(promise===true) {
+                                                   if(result===true) {
                                                         defer.resolve();
                                                    } else {
-                                                        defer.reject(promise);
-                                                        updateMessage(promise);
+                                                        defer.reject(result);
+                                                        updateMessage(result);
                                                    }
                                                 }
 
