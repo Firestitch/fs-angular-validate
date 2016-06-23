@@ -1,6 +1,15 @@
 <form fs-validate="submit()">
 
     <md-input-container class="md-block">
+        <label>Dropdown</label>        
+        <md-select ng-model="select" required>
+          <md-option ng-repeat="value in [{ id: 1, name: 'One' },{ id: 2, name: 'Two' }]" value="{{value.id}}">
+            {{value.name}}
+          </md-option>
+        </md-select>
+    </md-input-container>
+
+    <md-input-container class="md-block">
         <label>Required</label>
         <input type="text" ng-model="user.required" required>
     </md-input-container>

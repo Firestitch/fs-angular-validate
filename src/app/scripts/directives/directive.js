@@ -24,7 +24,8 @@
                 }
 
                 angular.forEach(tElem[0].querySelectorAll('md-input-container'),function(container) {
-                    var input = angular.element(container.querySelectorAll('input,textarea'));
+                   
+                    var input = angular.element(container.querySelectorAll('input,textarea,select,md-select'));
 
                     if(!input.attr('name')) {
                         input.attr('name','input_' + guid());
@@ -42,7 +43,7 @@
                 return {
 
                     pre: function($scope, element, attrs, form) {
-                    
+                   
                         $scope.form = form;
                         $scope.instance = { form: form,
                                             validate: function() {
@@ -81,16 +82,16 @@
                             .then(function() {
 
                                 if(form.$valid) {
-                                    
-                                     var el = angular.element(element[0].querySelector('.ng-invalid'))[0];
-
-                                     if(el) {
-                                        el.focus();
-                                     }
-
                                     if($scope.onsubmit) {
                                          $scope.$parent.$eval($scope.onsubmit);
                                     }
+                                } else {
+                                    
+                                    var el = angular.element(element[0].querySelector('.ng-invalid'))[0];
+
+                                    if(el) {
+                                        el.focus();
+                                    }                                    
                                 }
                             });
 
@@ -112,13 +113,13 @@
 
                             $scope.inputs = {};
                             angular.forEach(element[0].querySelectorAll('md-input-container,md-datepicker-container'),function(container) {
-
+ 
                                 var input = [];
                               
                                 if(container.nodeName.toLowerCase()==='md-datepicker-container') {
                                     input = angular.element(container.querySelectorAll('md-datepicker'));                                 
                                 } else {
-                                    input = angular.element(container.querySelectorAll('input,textarea'));
+                                    input = angular.element(container.querySelectorAll('input,textarea,select,md-select'));
                                 }
 
                                 if(input.length) {
