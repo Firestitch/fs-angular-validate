@@ -305,6 +305,10 @@
                                     if(input.attr('compare')!==undefined) {
                                         var message = input.attr('compare-message') || 'Mismatched value';
 
+                                        $scope.$parent.$watch(input.attr('compare'),angular.bind(this, function(controller, password) {
+                                            controller.$validate();
+                                        },controller));
+
                                         validators.compare = angular.bind(this, function(compareto, value) {
                                                                                     var compare = $scope.$parent.$eval(compareto);
                                                                                     return compare===value;
@@ -312,7 +316,7 @@
 
                                         messages.push('<ng-message when="compare">' + message + '</ng-message>');
                                     }
-                                    
+
                                     if(messages.length)  {
 
                                         $scope.$watch('form.' + name,function(value) {
