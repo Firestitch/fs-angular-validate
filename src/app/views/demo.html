@@ -86,8 +86,21 @@
         </md-input-container>
     </div>
 
-    <fs-lister ls-options="listerConf" ls-instance="listerInstance"></fs-lister>
 
+    <md-checkbox-container required>
+        <label>Checkboxes</label>
+        <div layout="row">
+            <md-checkbox ng-model="check1" aria-label="Checkbox 1">
+                Checkbox 1
+            </md-checkbox>      
+            <md-checkbox ng-model="check2" aria-label="Checkbox 2">
+                Checkbox 2
+            </md-checkbox>
+        </div>
+    </md-checkbox-container>
+<!--
+    <fs-lister ls-options="listerConf" ls-instance="listerInstance"></fs-lister>
+-->
 
     <div class="button-toolbar" layout="row" layout-align="end center">
         <md-button type="submit" class="md-primary">Create</md-button>
