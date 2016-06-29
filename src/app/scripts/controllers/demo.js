@@ -6,6 +6,8 @@
 
     $scope.user = { phone: '' };
 
+    $scope.checkboxes = [{ name: 'Checkbox 1' },{ name: 'Checkbox 2' }];
+
     $scope.asyncCustomSubmit = function() {
         var defer = $q.defer();
 

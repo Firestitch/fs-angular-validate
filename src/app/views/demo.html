@@ -90,11 +90,8 @@
     <md-checkbox-container required>
         <label>Checkboxes</label>
         <div layout="row">
-            <md-checkbox ng-model="check1" aria-label="Checkbox 1">
-                Checkbox 1
-            </md-checkbox>      
-            <md-checkbox ng-model="check2" aria-label="Checkbox 2">
-                Checkbox 2
+            <md-checkbox ng-model="check[$index]" name="checkbox_{{$index}}" aria-label="Checkbox {{$index}}" ng-repeat="checkbox in checkboxes">
+                {{checkbox.name}}
             </md-checkbox>
         </div>
     </md-checkbox-container>
