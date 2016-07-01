@@ -1,4 +1,3 @@
-
 (function () {
     'use strict';
     angular.module('fs-angular-validate',['ngMessages'])
@@ -43,7 +42,7 @@
                         angular.element(container).attr('name',name);
                         angular.element(container).attr('ng-model','models[' + name + ']');
                         angular.element(inputs).attr('container-name',name);
-                    }                    
+                    }
                 });
 
                 return {
@@ -52,6 +51,7 @@
 
                         $scope.form = form;
                         $scope.models = {};
+                        $scope.$parent.submitting = false;
                         $scope.instance = { form: form,
                                             validate: function() {
 
@@ -68,7 +68,7 @@
 
                         var element = angular.element(element);
                         element.on("submit", function(event) {
-
+                           
                             var validations = [];
                             angular.forEach(form,function(controller) {
 
@@ -87,19 +87,39 @@
 
                             $q.all(validations)
                             .then(function() {
+                                $scope.$parent.submitting = true;
 
+                                var submits = angular.element(element[0].querySelectorAll('button[type="submit"]'));
+                                
                                 if(form.$valid) {
-                                    if($scope.onsubmit) {
-                                         $scope.$parent.$eval($scope.onsubmit);
+                                    submits.attr('disabled','disabled');
+
+                                    var submitted = function() {
+                                        $timeout(function() {
+                                            $scope.$parent.submitting = false;
+                                            submits.removeAttr('disabled');
+                                        },500);
                                     }
-                                } else {
+
+                                    if($scope.onsubmit) {
+                                        var result = $scope.$parent.$eval($scope.onsubmit);
+
+                                        if(angular.isObject(result) && result.then) {
+                                            result.then(function() {
+                                                submitted();
+                                            });
+                                        } else {
+                                            submitted();
+                                        }
+                                    }
                                     
+                                } else {
                                     var el = angular.element(element[0].querySelector('.ng-invalid'))[0];
 
                                     if(el) {
                                         el.focus();
                                     }                                    
-                                }
+                                }                                
                             });
 
                         }).attr('novalidate','novalidate');
@@ -398,5 +418,3 @@
         };
     });
 })();
-
-
