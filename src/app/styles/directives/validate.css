@@ -1,6 +1,6 @@
 
-form[fs-validate] md-datepicker-container input {
-	border-color: rgb(221,44,0);
+form[fs-validate] md-datepicker-container .md-datepicker-input-container.md-datepicker-invalid input {
+    border-color: rgb(221,44,0);
 }
 
 form[fs-validate] md-datepicker-container ng-messages {
