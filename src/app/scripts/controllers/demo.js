@@ -5,7 +5,7 @@
   .controller('DemoCtrl', function ($scope, $q) {
 
     $scope.user = { phone: '' };
-
+    $scope.formInstance = {};
     $scope.checkboxes = [{ name: 'Checkbox 1' },{ name: 'Checkbox 2' }];
 
     $scope.asyncCustomSubmit = function() {
@@ -19,6 +19,9 @@
         return defer.promise;
     }
 
+    $scope.reset = function() {
+        $scope.formInstance.reset();
+    }
 
     $scope.listerConf = {
 

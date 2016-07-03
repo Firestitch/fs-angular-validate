@@ -1,4 +1,4 @@
-<form fs-validate="submit()">
+<form fs-validate="submit()" fs-instance="formInstance">
 
     <md-input-container class="md-block">
         <label>Dropdown</label>        
@@ -100,7 +100,8 @@
 -->
 
     <div class="button-toolbar" layout="row" layout-align="end center">
-        <md-button type="submit" class="md-primary">Create</md-button>
+        <md-button type="submit" class="md-primary">Submit</md-button>
+        <md-button type="button" ng-click="reset()" class="md-primary">Reset</md-button>
     </div>
     <div ng-show="submitted">Submitted</div>
 </form>

@@ -1,9 +1,9 @@
 
-md-datepicker-container input {
+form[fs-validate] md-datepicker-container input {
 	border-color: rgb(221,44,0);
 }
 
-md-datepicker-container ng-messages {
+form[fs-validate] md-datepicker-container ng-messages {
 	position: absolute;
     -webkit-order: 4;
     -ms-flex-order: 4;
@@ -12,7 +12,7 @@ md-datepicker-container ng-messages {
     clear: left;
 }
 
-md-datepicker-container ng-message {
+form[fs-validate] md-datepicker-container ng-message {
     font-size: 12px;
     line-height: 14px;
     overflow: hidden;
@@ -34,4 +34,3 @@ form[fs-validate] ng-message {
     color: #DD2C00; 
     transition: 0s !important;
 }
-

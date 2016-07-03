@@ -53,6 +53,12 @@
                         $scope.models = {};
                         $scope.$parent.submitting = false;
                         $scope.instance = { form: form,
+                                            reset: function() {
+
+                                                form.$setPristine();
+                                                form.$setUntouched();
+                                                $scope.submitted = false;
+                                            },                            
                                             validate: function() {
 
                                                 angular.forEach(form.$error, function(error) {
@@ -395,17 +401,13 @@
                                     messages.push('<ng-message when="required">' + message + '</ng-message>');
                                 } 
 
-                                $scope.$watch('form.' + name,function(value) {
-                                    $scope.inputs[name] = value;
-                                },true);
-
                                 if(messages.length)  {
                                     
-                                    var ngmessages = angular.element('<ng-messages  ' + 
+                                    var ngmessages = angular.element('<ng-messages ' + 
                                                                         'name="' + name + '" ' +
                                                                         'md-auto-hide="false" ' +
-                                                                        'ng-show="submitted || inputs[\'' + input.attr('name') + '\'].$touched" ' + 
-                                                                        'for="inputs[\'' + input.attr('name') + '\'].$error">' + messages.join('') + '</ng-messages>');
+                                                                        'ng-if="(submitted || form[\'' + input.attr('name') + '\'].$touched)" ' + 
+                                                                        'for="form[\'' + input.attr('name') + '\'].$error">' + messages.join('') + '</ng-messages>');
 
                                     angular.element(container).append(ngmessages);
                                     $compile(ngmessages)($scope);
