@@ -1,3 +1,4 @@
+<a href ng-click="show = !show">Toogle</a>
 <form fs-validate="submit()" fs-instance="formInstance">
 
     <md-input-container class="md-block">
@@ -8,12 +9,12 @@
           </md-option>
         </md-select>
     </md-input-container>
-
+<div ng-show="show">
     <md-input-container class="md-block">
         <label>Required</label>
         <input type="text" ng-model="user.required" required>
     </md-input-container>
-
+</div>
     <md-input-container class="md-block">
         <label>Email</label>
         <input type="text" ng-model="user.email" email>
@@ -23,7 +24,7 @@
         <label>Email &amp; Required</label>
         <input type="text" ng-model="user.emailrequired" required email>
     </md-input-container>
--->
+
     <md-input-container class="md-block">
         <label>Min Number</label>
         <input type="number" min="50" ng-model="user.min" />
@@ -95,6 +96,7 @@
             </md-checkbox>
         </div>
     </md-checkbox-container>
+-->
 <!--
     <fs-lister ls-options="listerConf" ls-instance="listerInstance"></fs-lister>
 -->

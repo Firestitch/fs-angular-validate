@@ -51,11 +51,15 @@
                     pre: function($scope, element, attrs, form) {
 
                         function visible(el) {
-                            var style = el.style;
+                            
+                            try {
+                                
+                                var style = window.getComputedStyle(el,null);
+                                if(style && (style.visibility=='hidden' || style.opacity=='0' || style.display=='none')) {
+                                    return false;
+                                }
 
-                            if(style && (style.visibility=='hidden' || style.opacity==='0' || style.display=='none')) {
-                                return false;
-                            }
+                            } catch(e) {}
 
                             if(el.parentNode) {
                                 return visible(el.parentNode);
