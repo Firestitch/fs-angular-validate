@@ -2,7 +2,7 @@
 
     <md-input-container class="md-block">
         <label>Dropdown</label>        
-        <md-select ng-model="select" required>
+        <md-select ng-model="select" required="required">
           <md-option ng-repeat="value in [{ id: 1, name: 'One' },{ id: 2, name: 'Two' }]" value="{{value.id}}">
             {{value.name}}
           </md-option>
@@ -18,12 +18,12 @@
         <label>Email</label>
         <input type="text" ng-model="user.email" email>
     </md-input-container>
-
+<!--
     <md-input-container class="md-block">
         <label>Email &amp; Required</label>
         <input type="text" ng-model="user.emailrequired" required email>
     </md-input-container>
-
+-->
     <md-input-container class="md-block">
         <label>Min Number</label>
         <input type="number" min="50" ng-model="user.min" />

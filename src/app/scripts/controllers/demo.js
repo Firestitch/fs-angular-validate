@@ -7,6 +7,7 @@
     $scope.user = { phone: '' };
     $scope.formInstance = {};
     $scope.checkboxes = [{ name: 'Checkbox 1' },{ name: 'Checkbox 2' }];
+    $scope.required = true;
 
     $scope.asyncCustomSubmit = function() {
         var defer = $q.defer();
@@ -198,8 +199,8 @@
     
     
         $scope.submit = function() {
-        	debugger;
         	$scope.submitted = true;
+            alert("Submitted");
         }
 
         $scope.syncCustom = function(value) {

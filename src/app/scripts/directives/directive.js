@@ -49,6 +49,20 @@
 
                     pre: function($scope, element, attrs, form) {
 
+                        function visible(el) {
+                            var style = el.style;
+
+                            if(style && (style.visibility=='hidden' || style.opacity==='0' || style.display=='none')) {
+                                return false;
+                            }
+
+                            if(el.parentNode) {
+                                return visible(el.parentNode);
+                            }
+
+                            return true;
+                        }
+
                         $scope.form = form;
                         $scope.models = {};
                         $scope.$parent.submitting = false;
@@ -69,25 +83,37 @@
                                                 });
 
                                                 return form.$valid;
-
                                             }};
 
                         var element = angular.element(element);
-                        element.on("submit", function(event) {
+                        element.on('submit', function(event) {
                            
                             var validations = [];
-                            angular.forEach(form,function(controller) {
+                            angular.forEach(form,function(controller,key) {
 
-                                if(controller && controller.$asyncValidators && controller.$asyncValidators['custom-submit']) {
+                                if(controller && controller.element) {
 
-                                    angular.forEach(controller.$asyncValidators,function(validator) {
-                                        validations.push(validator(controller.$viewValue,controller.$viewValue,true)
-                                                            .then(function() {
-                                                                controller.$setValidity('custom-submit', true);
-                                                            },function() {
-                                                                controller.$setValidity('custom-submit', false);
-                                                            }));
-                                    });
+                                    if(visible(controller.element)) {
+
+                                        if(controller.$asyncValidators && controller.$asyncValidators['custom-submit']) {
+
+                                            var validator = controller.$asyncValidators['custom-submit'];
+
+                                            validations.push(validator(controller.$viewValue,controller.$viewValue,true)
+                                                                .then(function() {
+                                                                    controller.$setValidity('custom-submit', true);
+                                                                },function() {
+                                                                    controller.$setValidity('custom-submit', false);
+                                                                }));
+                                        } else {
+                                            controller.$validate();
+                                        }
+                                        
+                                    } else {
+                                        angular.forEach(controller.$validators,function(value,name) {
+                                            controller.$setValidity(name,true);
+                                        });
+                                    }
                                 }
                             });
 
@@ -160,12 +186,13 @@
                             angular.forEach(element[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
   
                                 var messages = [];                       
-                                var input; 
+                                var containerName = container.nodeName.toLowerCase();
+                                var input;
 
-                                if(container.nodeName.toLowerCase()==='md-datepicker-container') {
+                                if(containerName==='md-datepicker-container') {
                                     input = container.querySelector('md-datepicker');
                                 
-                                } else if(container.nodeName.toLowerCase()==='md-checkbox-container') {
+                                } else if(containerName==='md-checkbox-container') {
                                     input = container;
                                 
                                 } else {
@@ -180,7 +207,13 @@
                                     return;
                                 }
 
-                                var validators = controller.$validators; 
+                                var validators = controller.$validators;
+
+                                if(containerName==='md-datepicker-container' || containerName==='md-checkbox-container') {
+                                    controller.element = container;  
+                                } else {
+                                    controller.element = input[0];
+                                }
 
                                 if(!name) {
                                     name = 'input_' + guid();
@@ -190,6 +223,10 @@
                                 if(input.attr('required')!==undefined) {
 
                                     var message = input.attr('required-message') || 'Required';
+
+                                    /*validators.required = angular.bind(this, function(value) {
+                                                                                    return typeof value === 'string' && value.length>0;
+                                                                                });*/
 
                                     messages.push('<ng-message when="required">' + message + '</ng-message>');
                                 }
@@ -327,6 +364,7 @@
 
                                             var defer = $q.defer();
 
+                                            // Only process a custom-submit validator when called from on('submit')
                                             if(type=='custom-submit' && !submitting) {
                                                 defer.resolve();
                                                 return defer.promise;
@@ -364,8 +402,6 @@
                              
                                     $scope.form[name].$asyncValidators[type] = custom;
                                 });
-
-
 
                                 if(angular.element(container).attr('required')!==undefined) {
 
