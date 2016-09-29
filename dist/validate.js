@@ -11,7 +11,7 @@
                 onsubmit: '@?fsValidate',
                 autocomplete: '@',
                 instance: '=?fsInstance'
-            },  
+            },
 
            compile: function(tElem, tAttrs) {
 
@@ -24,10 +24,10 @@
                 }
 
                 angular.forEach(tElem[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
-                   
+
                     var inputs = container.querySelectorAll('input,textarea,select,md-select,md-checkbox,md-datepicker');
 
-                    // Go through and find any inputs and if there is no name add one. This is so they will be 
+                    // Go through and find any inputs and if there is no name add one. This is so they will be
                     // initialized in the form controller
                     angular.forEach(inputs,function(input) {
                         var input = angular.element(input);
@@ -51,9 +51,9 @@
                     pre: function($scope, element, attrs, form) {
 
                         function visible(el) {
-                            
+
                             try {
-                                
+
                                 var style = window.getComputedStyle(el,null);
                                 if(style && (style.visibility=='hidden' || style.opacity=='0' || style.display=='none')) {
                                     return false;
@@ -77,7 +77,7 @@
                                                 form.$setPristine();
                                                 form.$setUntouched();
                                                 $scope.submitted = false;
-                                            },                            
+                                            },
                                             validate: function() {
 
                                                 angular.forEach(form.$error, function(error) {
@@ -92,7 +92,7 @@
 
                         var element = angular.element(element);
                         element.on('submit', function(event) {
-                           
+
                             var validations = [];
                             angular.forEach(form,function(controller,key) {
 
@@ -113,7 +113,7 @@
                                         } else {
                                             controller.$validate();
                                         }
-                                        
+
                                     } else {
                                         angular.forEach(controller.$validators,function(value,name) {
                                             controller.$setValidity(name,true);
@@ -127,7 +127,7 @@
                                 $scope.$parent.submitting = true;
 
                                 var submits = angular.element(element[0].querySelectorAll('button[type="submit"]'));
-                                
+
                                 if(form.$valid) {
                                     submits.attr('disabled','disabled');
 
@@ -149,14 +149,14 @@
                                             submitted();
                                         }
                                     }
-                                    
+
                                 } else {
                                     var el = angular.element(element[0].querySelector('.ng-invalid'))[0];
 
                                     if(el) {
                                         el.focus();
-                                    }                                    
-                                }                                
+                                    }
+                                }
                             });
 
                         }).attr('novalidate','novalidate');
@@ -164,12 +164,12 @@
                         if($scope.autocomplete===undefined) {
                             element.attr('autocomplete','off');
                         }
-                        
+
                         $scope.$watch('form.$submitted',function(value) {
                             $scope.submitted = value;
                         },true);
 
-                        $scope.$error = function(objects) {                            
+                        $scope.$error = function(objects) {
                             var error = {};
 
                             angular.forEach(objects,function(object) {
@@ -189,17 +189,17 @@
 
                             $scope.inputs = {};
                             angular.forEach(element[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
-  
-                                var messages = [];                       
+
+                                var messages = [];
                                 var containerName = container.nodeName.toLowerCase();
                                 var input;
 
                                 if(containerName==='md-datepicker-container') {
                                     input = container.querySelector('md-datepicker');
-                                
+
                                 } else if(containerName==='md-checkbox-container') {
                                     input = container;
-                                
+
                                 } else {
                                     input = container.querySelector('input,textarea,select,md-select');
                                 }
@@ -215,14 +215,14 @@
                                 var validators = controller.$validators;
 
                                 if(containerName==='md-datepicker-container' || containerName==='md-checkbox-container') {
-                                    controller.element = container;  
+                                    controller.element = container;
                                 } else {
                                     controller.element = input[0];
                                 }
 
                                 if(!name) {
                                     name = 'input_' + guid();
-                                    input.attr('name',name);                                    
+                                    input.attr('name',name);
                                 }
 
                                 if(input.attr('required')!==undefined) {
@@ -250,11 +250,11 @@
                                 if(input.attr('maxlength')!==undefined) {
 
                                     var message = input.attr('maxlength-message') || 'The value exceeds ' + input.attr('maxlength') + ' charaters';
-                                    
+
                                     validators.maxlength = angular.bind(this, function(length, value) {
                                                                                 return isEmpty(value) || String(value).length<parseInt(length);
-                                                                            },input.attr('maxlength'));            
-                                    
+                                                                            },input.attr('maxlength'));
+
                                     input.attr('maxlength',null);
                                     messages.push('<ng-message when="maxlength">' + message + '</ng-message>');
                                 }
@@ -262,19 +262,19 @@
                                 if(input.attr('range')!==undefined) {
 
                                     var message = input.attr('range-message') || 'Enter a value between ' + input.attr('min') + ' and ' + input.attr('max');
-                                    
+
                                     validators.max = null;
                                     validators.min = null;
 
                                     validators.range = angular.bind(this, function(min, max, value) {
                                                                                 return isEmpty(value) || (value>=min && value<=max);
-                                                                            },input.attr('min'),input.attr('max'));            
+                                                                            },input.attr('min'),input.attr('max'));
 
                                     messages.push('<ng-message when="range">' + message + '</ng-message>');
                                 }
 
                                 if(input.attr('type')=='tel') {
-                                     
+
                                     var message = input.attr('tel-message') || 'Enter a valid phone number';
 
                                     messages.push('<ng-message when="tel">' + message + '</ng-message>');
@@ -286,13 +286,13 @@
                                 }
 
                                 if(input.attr('email')!==undefined) {
-                                    
+
                                     var message = input.attr('email-message') || 'Enter a valid email';
 
                                     messages.push('<ng-message when="email">' + message + '</ng-message>');
 
                                     validators.email = function(value) {
-                                        
+
                                         var valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
 
                                         return isEmpty(value) || !String(value).length || valid
@@ -311,7 +311,7 @@
                                 }
 
                                 if(input.attr('max')!==undefined) {
-                                    
+
                                     var message = input.attr('max-message') || 'Enter a number less then or equal to ' + String(input.attr('max'));
 
                                     validators.max = angular.bind(this, function(max, value) {
@@ -320,7 +320,7 @@
 
                                     messages.push('<ng-message when="max">' + message + '</ng-message>');
                                 }
-                                
+
                                 if(input.attr('compare')!==undefined) {
                                     var message = input.attr('compare-message') || 'Mismatched value';
 
@@ -344,18 +344,16 @@
                                         return;
                                     }
 
-                                    messages.push('<ng-message when="' + type + '"></ng-message>');
+                                    messages.push('<ng-message when="' + type + '">' + (input.attr('custom-message') || '') + '</ng-message>');
+
+                                     if(type=='custom') {
+                                        input.on('blur',function() {
+                                            controller.$validate();
+                                        });
+                                    }
 
                                     var custom = angular.bind(this,
-                                        function(input, element, $scope, type, value, oldValue, submitting) {                                                
-
-                                            var updateMessage = function(message) {
-                                                setTimeout(function() {
-                                                    message = message || input.attr('custom-message');
-                                                    var el = angular.element(element[0].querySelector('ng-messages[name=\'' + input.attr('name') + '\'] ng-message[when=\'' + type + '\']'));
-                                                    el.text(message);
-                                                });
-                                            }
+                                        function(input, element, $scope, type, value, oldValue, submitting) {
 
                                             if(input.attr('type')=='num') {
                                                 if(value===undefined) {
@@ -367,51 +365,60 @@
                                                 }
                                             }
 
-                                            var defer = $q.defer();
+                                            var promise = $q(function(resolve,reject) {
 
-                                            // Only process a custom-submit validator when called from on('submit')
-                                            if(type=='custom-submit' && !submitting) {
-                                                defer.resolve();
-                                                return defer.promise;
-                                            }
+                                                 // Only process a custom-submit validator when called from on('submit')
+                                                if(type=='custom-submit' && !submitting) {
+                                                    return resolve();
+                                                }
 
-                                            var result = $scope.$parent.$eval(input.attr(type));
+                                                var result = $scope.$parent.$eval(input.attr(type));
 
-                                            if(angular.isFunction(result)) {
-                                                result = result(value);
-                                            }
+                                                if(angular.isFunction(result)) {
+                                                    result = result(value);
+                                                }
 
-                                            if(angular.isObject(result) && result.catch) {
+                                                if(angular.isObject(result) && result.catch) {
 
-                                                result
-                                                .then(function() {
-                                                    defer.resolve();
-                                                })
-                                                .catch(function(message) {
+                                                    result
+                                                    .then(function() {
+                                                        resolve();
+                                                    })
+                                                    .catch(function(message) {
+                                                        reject(message);
+                                                    });
+                                                } else {
+                                                   if(result===true) {
+                                                        resolve();
+                                                   } else {
+                                                        reject(result);
+                                                   }
+                                                }
+                                            });
 
-                                                    defer.reject();
-                                                    updateMessage(message);
+                                            promise
+                                            .then(function(message) {
+                                                return message;
+                                            },function(message) {
+                                                if(message) {
+                                                    $timeout(function() {
+                                                       angular.element(element[0].querySelector('ng-messages[name="' + input.attr('name') + '"] ng-message[when="' + type + '"]'))
+                                                        .text(message);
+                                                    });
+                                                }
+                                                return $q.reject(message);
+                                            });
 
-                                                });
-                                            } else {
-                                               if(result===true) {
-                                                    defer.resolve();
-                                               } else {
-                                                    defer.reject(result);
-                                                    updateMessage(result);
-                                               }
-                                            }
-
-                                            return defer.promise;
+                                            return promise;
                                     },input, element, $scope, type);
-                             
+
                                     $scope.form[name].$asyncValidators[type] = custom;
                                 });
 
                                 if(angular.element(container).attr('required')!==undefined) {
 
                                     var checkboxes = container.querySelectorAll('md-checkbox');
-  
+
                                     angular.forEach(checkboxes,function(checkbox) {
                                         var name = angular.element(checkbox).attr('name');
 
@@ -440,24 +447,24 @@
                                 if(angular.element(container).attr('required')!==undefined) {
                                     var message = angular.element(container).attr('required-message') || 'Required';
                                     messages.push('<ng-message when="required">' + message + '</ng-message>');
-                                } 
+                                }
 
                                 if(messages.length)  {
-                                    
-                                    var ngmessages = angular.element('<ng-messages ' + 
+
+                                    var ngmessages = angular.element('<ng-messages ' +
                                                                         'name="' + name + '" ' +
                                                                         'md-auto-hide="false" ' +
-                                                                        'ng-if="(submitted || form[\'' + input.attr('name') + '\'].$touched)" ' + 
+                                                                        'ng-if="(submitted || form[\'' + input.attr('name') + '\'].$touched)" ' +
                                                                         'for="form[\'' + input.attr('name') + '\'].$error">' + messages.join('') + '</ng-messages>');
 
                                     angular.element(container).append(ngmessages);
                                     $compile(ngmessages)($scope);
-                                }                                
+                                }
                             });
                         });
                     }
                 }
-            }  
+            }
         };
     });
 })();
