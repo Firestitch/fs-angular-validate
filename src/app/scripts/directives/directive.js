@@ -251,7 +251,7 @@
                                     var message = input.attr('maxlength-message') || 'The value exceeds ' + input.attr('maxlength') + ' charaters';
 
                                     validators.maxlength = angular.bind(this, function(length, value) {
-                                                                                return isEmpty(value) || String(value).length<parseInt(length);
+                                                                                return isEmpty(value) || String(value).length<=parseInt(length);
                                                                             },input.attr('maxlength'));
 
                                     input.attr('maxlength',null);
