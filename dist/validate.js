@@ -238,7 +238,7 @@
 
                                 if(input.attr('minlength')!==undefined) {
 
-                                    var message = input.attr('minlength-message') || 'The value must be at least ' + input.attr('minlength') + ' charaters';
+                                    var message = input.attr('minlength-message') || 'The value must be at least ' + input.attr('minlength') + ' characters';
 
                                     validators.minlength = angular.bind(this, function(length, value) {
                                                                                     return isEmpty(value) || String(value).length>=parseInt(length);
@@ -249,7 +249,7 @@
 
                                 if(input.attr('maxlength')!==undefined) {
 
-                                    var message = input.attr('maxlength-message') || 'The value exceeds ' + input.attr('maxlength') + ' charaters';
+                                    var message = input.attr('maxlength-message') || 'The value exceeds ' + input.attr('maxlength') + ' characters';
 
                                     validators.maxlength = angular.bind(this, function(length, value) {
                                                                                 return isEmpty(value) || String(value).length<=parseInt(length);
