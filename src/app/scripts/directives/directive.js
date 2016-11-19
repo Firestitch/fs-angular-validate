@@ -292,7 +292,8 @@
 
                                     validators.email = function(value) {
 
-                                        var valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value);
+                                        var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
+                                        var valid = EMAIL_REGEXP.test(value);
 
                                         return isEmpty(value) || !String(value).length || valid
                                     }
