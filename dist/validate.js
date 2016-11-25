@@ -1,8 +1,8 @@
 
 (function () {
     'use strict';
-    angular.module('fs-angular-validate',['ngMessages'])
-    .directive('fsValidate', function($parse, $compile, $q, $timeout) {
+    angular.module('fs-angular-validate',['ngMessages','fs-angular-util'])
+    .directive('fsValidate', function($parse, $compile, $q, $timeout, fsUtil) {
         return {
             require: 'form',
             restrict: 'A',
@@ -15,14 +15,6 @@
 
            compile: function(tElem, tAttrs) {
 
-                function guid()
-                {
-                    return 'xxxxxx'.replace(/[xy]/g, function(c) {
-                        var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
-                        return v.toString(16);
-                    });
-                }
-
                 angular.forEach(tElem[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
 
                     var inputs = container.querySelectorAll('input,textarea,select,md-select,md-checkbox,md-datepicker');
@@ -32,14 +24,14 @@
                     angular.forEach(inputs,function(input) {
                         var input = angular.element(input);
                         if(!input.attr('name')) {
-                            input.attr('name','input_' + guid());
+                            input.attr('name','input_' + fsUtil.guid());
                         }
                     });
 
                     // For the checkbox container fake a model view controller so that it will be
                     // initialized in the form controller
                     if(container.nodeName.toLowerCase()==='md-checkbox-container') {
-                        var name = 'container_' + guid();
+                        var name = 'container_' + fsUtil.guid();
                         angular.element(container).attr('name',name);
                         angular.element(container).attr('ng-model','models[' + name + ']');
                         angular.element(inputs).attr('container-name',name);
@@ -221,7 +213,7 @@
                                 }
 
                                 if(!name) {
-                                    name = 'input_' + guid();
+                                    name = 'input_' + fsUtil.guid();
                                     input.attr('name',name);
                                 }
 
@@ -373,7 +365,9 @@
                                                     return resolve();
                                                 }
 
-                                                var result = $scope.$parent.$eval(input.attr(type));
+                                                var scope = input.data('scope') ? input.data('scope') : $scope.$parent;
+
+                                                var result = scope.$eval(input.attr(type));
 
                                                 if(angular.isFunction(result)) {
                                                     result = result(value);
