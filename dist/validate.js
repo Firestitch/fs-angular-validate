@@ -149,7 +149,7 @@
                                         el.focus();
                                     }
 
-                                    fsAlert.error('Changes not saved.  Please review errors highlighted in red.',{ mode: toast });
+                                    fsAlert.error('Changes not saved.  Please review errors highlighted in red.',{ mode: 'toast' });
                                 }
                             });
 
