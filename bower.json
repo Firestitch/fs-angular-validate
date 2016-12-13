@@ -6,8 +6,8 @@
     "dist/validate.css"
   ],
   "dependencies": {
-    "angular-messages": "^1.5",
-    "fs-angular-util": "latest"
+    "fs-angular-util": "^1.0.0",
+    "fs-angular-alert": "^1.0.0"
   },
   "authors": [
     "Firestitch Inc."

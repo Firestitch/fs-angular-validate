@@ -8,9 +8,9 @@
   "dependencies": {
     "angular": "1.6.0",
     "angular-material": "1.1.1",
-    "fs-angular-lister": "latest",
-    "fs-angular-util": "latest",
-    "angular-ui-router": "0.2.15",
-    "angular-messages": "^1.5"
+    "fs-angular-lister": "^1.0.0",
+    "fs-angular-util": "^1.0.0",
+    "fs-angular-alert": "^1.0.0",
+    "angular-ui-router": "0.2.15"
   }
 }

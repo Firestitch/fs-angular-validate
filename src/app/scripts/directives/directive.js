@@ -1,7 +1,7 @@
 (function () {
     'use strict';
-    angular.module('fs-angular-validate',['ngMessages','fs-angular-util'])
-    .directive('fsValidate', function($parse, $compile, $q, $timeout, fsUtil) {
+    angular.module('fs-angular-validate',['ngMessages','fs-angular-util','fs-angular-alert'])
+    .directive('fsValidate', function($parse, $compile, $q, $timeout, fsUtil, fsAlert) {
         return {
             require: 'form',
             restrict: 'A',
@@ -147,6 +147,8 @@
                                     if(el) {
                                         el.focus();
                                     }
+
+                                    fsAlert.error('Changes not saved.  Please review errors highlighted in red.',{ mode: 'toast' });
                                 }
                             });
 
