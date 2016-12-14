@@ -22,7 +22,7 @@
 
     <!-- View Container for "normal" pages -->
     <md-content layout="row" layout-align="center center">
-        <div flex="50">  
+        <div flex="50">
             <h1 ng-cloak>Demo {{app_name}}</h1>
             <div ui-view></div>
         </div>
@@ -44,22 +44,21 @@
     <script src="bower_components/fs-angular-util/dist/util.js"></script>
     <script src="bower_components/fs-angular-alert/dist/alert.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <!-- endbower -->    
+    <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:js({.tmp,dist,app}) scripts/scripts.js -->
-    
+
     <script src="config/config.js"></script>
     <script src="scripts/app.js"></script>
 
+    <script src="scripts/directives/directive.js"></script>
     <script src="scripts/services/service.js"></script>
 
-    <script src="scripts/directives/directive.js"></script>
-    
-    <script src="scripts/filters/filter.js"></script>    
-    
+    <script src="scripts/filters/filter.js"></script>
+
     <script src="scripts/controllers/demo.js"></script>
-    
+
     <!-- endbuild -->
 </body>
 </html>

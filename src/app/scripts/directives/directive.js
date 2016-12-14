@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     angular.module('fs-angular-validate',['ngMessages','fs-angular-util','fs-angular-alert'])
-    .directive('fsValidate', function($parse, $compile, $q, $timeout, fsUtil, fsAlert) {
+    .directive('fsValidate', function($parse, $compile, $q, $timeout, fsUtil, fsAlert, fsValidate) {
         return {
             require: 'form',
             restrict: 'A',
@@ -174,10 +174,6 @@
                             return error;
                         }
 
-                        var isEmpty = function(value) {
-                            return value===undefined || value===null || value==="";
-                        }
-
                         $timeout(function() {
 
                             $scope.inputs = {};
@@ -221,11 +217,6 @@
                                 if(input.attr('required')!==undefined) {
 
                                     var message = input.attr('required-message') || 'Required';
-
-                                    /*validators.required = angular.bind(this, function(value) {
-                                                                                    return typeof value === 'string' && value.length>0;
-                                                                                });*/
-
                                     messages.push('<ng-message when="required">' + message + '</ng-message>');
                                 }
 
@@ -234,7 +225,7 @@
                                     var message = input.attr('minlength-message') || 'The value must be at least ' + input.attr('minlength') + ' characters';
 
                                     validators.minlength = angular.bind(this, function(length, value) {
-                                                                                    return isEmpty(value) || String(value).length>=parseInt(length);
+                                                                                    return fsValidate.empty(value) || String(value).length>=parseInt(length);
                                                                                 },input.attr('minlength'));
 
                                     messages.push('<ng-message when="minlength">' + message + '</ng-message>');
@@ -245,7 +236,7 @@
                                     var message = input.attr('maxlength-message') || 'The value exceeds ' + input.attr('maxlength') + ' characters';
 
                                     validators.maxlength = angular.bind(this, function(length, value) {
-                                                                                return isEmpty(value) || String(value).length<=parseInt(length);
+                                                                                return fsValidate.empty(value) || String(value).length<=parseInt(length);
                                                                             },input.attr('maxlength'));
 
                                     input.attr('maxlength',null);
@@ -260,21 +251,20 @@
                                     validators.min = null;
 
                                     validators.range = angular.bind(this, function(min, max, value) {
-                                                                                return isEmpty(value) || (value>=min && value<=max);
+                                                                                return fsValidate.empty(value) || (value>=min && value<=max);
                                                                             },input.attr('min'),input.attr('max'));
 
                                     messages.push('<ng-message when="range">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('type')=='tel') {
+                                if(input.attr('phone')!==undefined || input.attr('type')=='tel') {
 
                                     var message = input.attr('tel-message') || 'Enter a valid phone number';
 
                                     messages.push('<ng-message when="tel">' + message + '</ng-message>');
 
                                     validators.tel = function(value) {
-                                        var valid = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(value);
-                                        return valid || !String(value).length;
+                                    	return fsValidate.phone(value);
                                     }
                                 }
 
@@ -285,11 +275,7 @@
                                     messages.push('<ng-message when="email">' + message + '</ng-message>');
 
                                     validators.email = function(value) {
-
-                                        var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-                                        var valid = EMAIL_REGEXP.test(value);
-
-                                        return isEmpty(value) || !String(value).length || valid
+                                    	return fsValidate.email(value);
                                     }
                                 }
 
@@ -298,7 +284,7 @@
                                     var message = input.attr('min-message') || 'Enter a number greater then or equal to ' + String(input.attr('min'));
 
                                     validators.min = angular.bind(this, function(min, value) {
-                                                                                return isEmpty(value) || value>=min;
+                                                                                return fsValidate.empty(value) || value>=min;
                                                                             },input.attr('min'));
 
                                     messages.push('<ng-message when="min">' + message + '</ng-message>');
@@ -309,7 +295,7 @@
                                     var message = input.attr('max-message') || 'Enter a number less then or equal to ' + String(input.attr('max'));
 
                                     validators.max = angular.bind(this, function(max, value) {
-                                                                                return isEmpty(value) || value<max;
+                                                                                return fsValidate.empty(value) || value<max;
                                                                             },input.attr('max'));
 
                                     messages.push('<ng-message when="max">' + message + '</ng-message>');
