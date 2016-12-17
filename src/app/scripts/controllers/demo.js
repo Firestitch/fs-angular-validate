@@ -36,8 +36,8 @@
            // alert("Row Click: " + JSON.stringify(data));
         },
         data: function(query, cb) {
-            
-            //return setTimeout(function() { cb([]); }, 2000); 
+
+            //return setTimeout(function() { cb([]); }, 2000);
 
             query.count = 22;
 
@@ -49,22 +49,22 @@
 
         load: true,
 
-        
+
         paging: {
 
             infinite: true,
             limit: 5
         },
-        
+
         //paging: false,
         /*
         action:
-        {   
+        {
             click: function(data, event) {
 
                 if(this.delete) {
-                   
-                }                
+
+                }
             },
             delete: {
                 title: 'Attention',
@@ -78,7 +78,7 @@
         */
 
         actions: [
-             
+
             {
                 label: 'Edit',
                 icon: 'edit',
@@ -87,13 +87,13 @@
                     //alert("Edit Action Click: " + JSON.stringify(data));
                 }
             },
-           
+
             {
                 label: 'Delete',
                 show: function() { return true },
-                delete:  {  
+                delete:  {
                             content: 'Are you sure you would like to remove this?',
-                            ok: function(data) {                            
+                            ok: function(data) {
                                 alert("Delete Action Click: " + JSON.stringify(data));
 
                                 var deferred = $q.defer();
@@ -102,13 +102,13 @@
                             }
                         }
             }
-           
+
         ],
 
         columns: [
-            {   title: 'Name' , 
+            {   title: 'Name' ,
                 order: { name: 'name', default: true },
-                value: function(data) {                
+                value: function(data) {
                     return "<b>" + data['name'] + "</b>";
                 }
             }
@@ -148,7 +148,7 @@
                 }
             }]
         },
-        
+
         filters: [
             {
                 name: 'search',
@@ -179,7 +179,7 @@
                     apple: 'Apple',
                 },
                 multiple: true
-            },            
+            },
             //{
             //    type: 'newline'
             //},
@@ -196,32 +196,32 @@
             }
         ]
     };
-    
-    
+
+
         $scope.submit = function() {
         	$scope.submitted = true;
             alert("Submitted");
         }
 
         $scope.syncCustom = function(value) {
-           
+
             if(value==="" || String(value)=="hello") {
                 return true;
             } else {
                 return false;
             }
-        } 
+        }
 
         $scope.asyncCustom = function(value) {
 
             var deferred = $q.defer();
-            
+
             if(value==="" || String(value)=="hello") {
                 deferred.resolve();
             } else {
                 deferred.reject('Async Custom message. The valid value is \'hello\'');
-            }                                       
-                                        
+            }
+
             return deferred.promise;
         }
 });

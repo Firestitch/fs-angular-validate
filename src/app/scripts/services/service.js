@@ -6,12 +6,11 @@
      * @name fs.services:fsValidate
      */
      angular.module('fs-angular-validate')
-    .factory('fsValidate', function() {
+    .factory('fsValidate', function(fsUtil) {
 
         return {
         	phone: phone,
-        	email: email,
-        	empty: empty
+        	email: email
         };
 
 		/**
@@ -34,15 +33,8 @@
 	     * @returns {boolean} The result of the validation
 	     */
         function email(value) {
-			var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-			var valid = EMAIL_REGEXP.test(value);
-			return empty(value) || !String(value).length || valid
+			return !!fsUtil.string(value).match(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i);
         }
-
-        function empty(value) {
-            return value===undefined || value===null || value==="";
-        }
-
     });
 
 })();

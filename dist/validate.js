@@ -1,6 +1,29 @@
 
 (function () {
     'use strict';
+
+
+	/**
+	 * @ngdoc directive
+	 * @name rfx.directive:rAutogrow
+	 * @element textarea
+	 * @function
+	 *
+	 * @description
+	 * Resize textarea automatically to the size of its text content.
+	 *
+	 * **Note:** ie<9 needs pollyfill for window.getComputedStyle
+	 *
+	 * @example
+	   <example module="rfx">
+	     <file name="index.html">
+	         <textarea ng-model="text" r-autogrow class="input-block-level"></textarea>
+	         <pre>{{text}}</pre>
+	     </file>
+	   </example>
+	 */
+
+
     angular.module('fs-angular-validate',['ngMessages','fs-angular-util','fs-angular-alert'])
     .directive('fsValidate', function($parse, $compile, $q, $timeout, fsUtil, fsAlert, fsValidate) {
         return {
@@ -226,7 +249,7 @@
                                     var message = input.attr('minlength-message') || 'The value must be at least ' + input.attr('minlength') + ' characters';
 
                                     validators.minlength = angular.bind(this, function(length, value) {
-                                                                                    return fsValidate.empty(value) || String(value).length>=parseInt(length);
+                                                                                    return fsUtil.isEmpty(value) || String(value).length>=parseInt(length);
                                                                                 },input.attr('minlength'));
 
                                     messages.push('<ng-message when="minlength">' + message + '</ng-message>');
@@ -237,7 +260,7 @@
                                     var message = input.attr('maxlength-message') || 'The value exceeds ' + input.attr('maxlength') + ' characters';
 
                                     validators.maxlength = angular.bind(this, function(length, value) {
-                                                                                return fsValidate.empty(value) || String(value).length<=parseInt(length);
+                                                                                return fsUtil.isEmpty(value) || String(value).length<=parseInt(length);
                                                                             },input.attr('maxlength'));
 
                                     input.attr('maxlength',null);
@@ -252,7 +275,7 @@
                                     validators.min = null;
 
                                     validators.range = angular.bind(this, function(min, max, value) {
-                                                                                return fsValidate.empty(value) || (value>=min && value<=max);
+                                                                                return fsUtil.isEmpty(value) || (value>=min && value<=max);
                                                                             },input.attr('min'),input.attr('max'));
 
                                     messages.push('<ng-message when="range">' + message + '</ng-message>');
@@ -285,7 +308,7 @@
                                     var message = input.attr('min-message') || 'Enter a number greater then or equal to ' + String(input.attr('min'));
 
                                     validators.min = angular.bind(this, function(min, value) {
-                                                                                return fsValidate.empty(value) || value>=min;
+                                                                                return fsUtil.isEmpty(value) || value>=min;
                                                                             },input.attr('min'));
 
                                     messages.push('<ng-message when="min">' + message + '</ng-message>');
@@ -296,10 +319,44 @@
                                     var message = input.attr('max-message') || 'Enter a number less then or equal to ' + String(input.attr('max'));
 
                                     validators.max = angular.bind(this, function(max, value) {
-                                                                                return fsValidate.empty(value) || value<max;
+                                                                                return fsUtil.isEmpty(value) || value<max;
                                                                             },input.attr('max'));
 
                                     messages.push('<ng-message when="max">' + message + '</ng-message>');
+                                }
+
+                                if(input.attr('numeric')!==undefined) {
+
+                                    var message = input.attr('numeric-message') || 'Invalid number';
+
+                                    validators.numeric = angular.bind(this, function(value) {
+                                                                                return fsUtil.isNumeric(value);
+                                                                            });
+
+                                    messages.push('<ng-message when="numeric">' + message + '</ng-message>');
+                                }
+
+
+                                if(input.attr('integer')!==undefined) {
+
+                                    var message = input.attr('integer-message') || 'Invalid whole number';
+
+                                    validators.integer = angular.bind(this, function(value) {
+                                                                                return fsUtil.isInt(value);
+                                                                            });
+
+                                    messages.push('<ng-message when="integer">' + message + '</ng-message>');
+                                }
+
+                                if(input.attr('currency')!==undefined) {
+
+                                    var message = input.attr('currency-message') || 'Invalid format';
+
+                                    validators.currency = angular.bind(this, function(value) {
+                                                                                return fsUtil.isNumeric(value);
+                                                                            });
+
+                                    messages.push('<ng-message when="currency">' + message + '</ng-message>');
                                 }
 
                                 if(input.attr('compare')!==undefined) {
@@ -354,29 +411,35 @@
                                                 }
 
                                                 var scope = input.data('scope') ? input.data('scope') : $scope.$parent;
-
                                                 var result = scope.$eval(input.attr(type));
 
-                                                if(angular.isFunction(result)) {
-                                                    result = result(value);
-                                                }
+                                                try {
 
-                                                if(angular.isObject(result) && result.catch) {
+	                                                if(angular.isFunction(result)) {
+	                                                    result = result(value);
+	                                                }
 
-                                                    result
-                                                    .then(function() {
-                                                        resolve();
-                                                    })
-                                                    .catch(function(message) {
-                                                        reject(message);
-                                                    });
-                                                } else {
-                                                   if(result===true) {
-                                                        resolve();
-                                                   } else {
-                                                        reject(result);
-                                                   }
-                                                }
+	                                                if(angular.isObject(result) && result.catch) {
+
+	                                                    result
+	                                                    .then(function() {
+	                                                        resolve();
+	                                                    })
+	                                                    .catch(function(message) {
+	                                                        reject(message);
+	                                                    });
+
+	                                                } else {
+	                                                   if(result===true) {
+	                                                        resolve();
+	                                                   } else {
+	                                                        reject(result);
+	                                                   }
+	                                                }
+
+	                                            } catch(e) {
+	                                            	reject(e);
+	                                            }
                                             });
 
                                             promise
@@ -459,12 +522,11 @@
      * @name fs.services:fsValidate
      */
      angular.module('fs-angular-validate')
-    .factory('fsValidate', function() {
+    .factory('fsValidate', function(fsUtil) {
 
         return {
         	phone: phone,
-        	email: email,
-        	empty: empty
+        	email: email
         };
 
 		/**
@@ -487,15 +549,8 @@
 	     * @returns {boolean} The result of the validation
 	     */
         function email(value) {
-			var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
-			var valid = EMAIL_REGEXP.test(value);
-			return empty(value) || !String(value).length || valid
+			return !!fsUtil.string(value).match(/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i);
         }
-
-        function empty(value) {
-            return value===undefined || value===null || value==="";
-        }
-
     });
 
 })();
