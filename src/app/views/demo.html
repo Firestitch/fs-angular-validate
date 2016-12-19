@@ -3,6 +3,8 @@
 
     <div ng-hide="hide">
 
+    <fs-lister ls-options="listerConf"></fs-lister>
+
     <md-input-container class="md-block">
         <label>Numeric</label>
         <input type="text" ng-model="user.numeric" numeric>
@@ -17,8 +19,6 @@
         <label>Currency</label>
         <input type="text" ng-model="user.currency" currency="USD">
     </md-input-container>
-
-
 
     <md-input-container class="md-block">
         <label>Dropdown</label>
@@ -121,9 +121,6 @@
             </div>
         </md-checkbox-container>
     </div>
-<!--
-    <fs-lister ls-options="listerConf" ls-instance="listerInstance"></fs-lister>
--->
 
     <div class="button-toolbar" layout="row" layout-align="end center">
         <md-button type="submit" class="md-primary">Submit</md-button>

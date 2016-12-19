@@ -2,7 +2,7 @@
 
 
 angular.module('app')
-  .controller('DemoCtrl', function ($scope, $q) {
+  .controller('DemoCtrl', function ($scope, $q, dummyService, $timeout) {
 
     $scope.user = { phone: '' };
     $scope.formInstance = {};
@@ -38,45 +38,25 @@
         data: function(query, cb) {
 
             //return setTimeout(function() { cb([]); }, 2000);
+            query.count = 3;
 
-            query.count = 22;
+            var url = 'https://service.firestitch.com/api/';
 
-            var data = [{ name: '1111111111111' },{ name: '222222222222222' }];
+            dummyService.gets(query,{ url: url })
+            .then(function(result) {
+                cb(result.objects,result.paging);
+            });
 
-            cb(data);
 
+            //var data = [{ guid: '87asdfyg234rwas', name: '1111111111111' },{ guid: '974ruysdag32419', name: '222222222222222' }];
+
+            //cb(data,{ pages: 1, records: 2, page: 1 });
         },
-
         load: true,
-
-
         paging: {
-
             infinite: true,
             limit: 5
         },
-
-        //paging: false,
-        /*
-        action:
-        {
-            click: function(data, event) {
-
-                if(this.delete) {
-
-                }
-            },
-            delete: {
-                title: 'Attention',
-                content: 'Please confirm',
-                ok: function(data) {
-                    alert('OK!');
-                }
-
-            }
-        },
-        */
-
         actions: [
 
             {
@@ -109,7 +89,14 @@
             {   title: 'Name' ,
                 order: { name: 'name', default: true },
                 value: function(data) {
-                    return "<b>" + data['name'] + "</b>";
+                    return '{{data.name}}';
+                }
+            },
+            {   title: 'Input' ,
+                value: function(data) {
+                    return '<md-input-container>\
+                    			<input ng-model="model" name="input_{{data.guid}}" aria-label="label" numeric>\
+                    		</md-input-container>';
                 }
             }
         ],
@@ -149,7 +136,7 @@
             }]
         },
 
-        filters: [
+       /* filters: [
             {
                 name: 'search',
                 type: 'text',
@@ -194,7 +181,7 @@
                 label: 'Numbered range',
                 placeholders: ['Min', 'Max']
             }
-        ]
+        ]*/
     };
 
 

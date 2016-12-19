@@ -64,45 +64,13 @@
 
                     pre: function($scope, element, attrs, form) {
 
-                        function visible(el) {
-
-                            try {
-
-                                var style = window.getComputedStyle(el,null);
-                                if(style && (style.visibility=='hidden' || style.opacity=='0' || style.display=='none')) {
-                                    return false;
-                                }
-
-                            } catch(e) {}
-
-                            if(el.parentNode) {
-                                return visible(el.parentNode);
-                            }
-
-                            return true;
-                        }
-
                         $scope.form = form;
                         $scope.models = {};
                         $scope.$parent.submitting = false;
                         $scope.instance = { form: form,
-                                            reset: function() {
-
-                                                form.$setPristine();
-                                                form.$setUntouched();
-                                                $scope.submitted = false;
-                                            },
-                                            validate: function() {
-
-                                                angular.forEach(form.$error, function(error) {
-                                                    angular.forEach(error, function(field) {
-                                                        field.$setDirty();
-                                                        field.$setTouched();
-                                                    });
-                                                });
-
-                                                return form.$valid;
-                                            }};
+                                            reset: reset,
+                                           	validate: validate,
+                                           	update: update };
 
                         var element = angular.element(element);
                         element.on('submit', function(event) {
@@ -197,10 +165,42 @@
                             return error;
                         }
 
-                        $timeout(function() {
+                        function visible(el) {
+                            try {
 
-                            $scope.inputs = {};
-                            angular.forEach(element[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
+                                var style = window.getComputedStyle(el,null);
+                                if(style && (style.visibility=='hidden' || style.opacity=='0' || style.display=='none')) {
+                                    return false;
+                                }
+
+                            } catch(e) {}
+
+                            if(el.parentNode) {
+                                return visible(el.parentNode);
+                            }
+
+                            return true;
+                        }
+
+                        function reset() {
+                            form.$setPristine();
+                            form.$setUntouched();
+                            $scope.submitted = false;
+                        }
+
+						function validate() {
+                            angular.forEach(form.$error, function(error) {
+                                angular.forEach(error, function(field) {
+                                    field.$setDirty();
+                                    field.$setTouched();
+                                });
+                            });
+
+                            return form.$valid;
+                        }
+
+                        function update() {
+							angular.forEach(element[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
 
                                 var messages = [];
                                 var containerName = container.nodeName.toLowerCase();
@@ -220,11 +220,13 @@
                                 var name = input.attr('name');
                                 var controller = $scope.form[name];
 
-                                if(!controller) {
-                                    return;
+                                if(!controller || input.data('vs-validate')) {
+                              		return;
                                 }
 
                                 var validators = controller.$validators;
+
+                                input.data('vs-validate',true);
 
                                 if(containerName==='md-datepicker-container' || containerName==='md-checkbox-container') {
                                     controller.element = container;
@@ -506,7 +508,23 @@
                                     $compile(ngmessages)($scope);
                                 }
                             });
-                        });
+                        }
+
+						//HACK: In order to listen for new controls the code below has to override then
+						//      do some function switching and reseting.
+						function addControl(control) {
+							try {
+								$scope.form.$addControl = $addControl;
+								$scope.form.$addControl(control);
+								$timeout(update);
+							} catch(e) {}
+							$scope.form.$addControl = addControl;
+						}
+
+						var $addControl = $scope.form.$addControl;
+						$scope.form.$addControl = addControl;
+
+	                    $timeout(update);
                     }
                 }
             }
