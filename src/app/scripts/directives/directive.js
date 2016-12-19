@@ -331,7 +331,7 @@
                                     var message = input.attr('numeric-message') || 'Invalid number';
 
                                     validators.numeric = angular.bind(this, function(value) {
-                                                                                return fsUtil.isNumeric(value);
+                                                                                return !fsUtil.string(value).length || fsUtil.isNumeric(value);
                                                                             });
 
                                     messages.push('<ng-message when="numeric">' + message + '</ng-message>');
@@ -343,7 +343,7 @@
                                     var message = input.attr('integer-message') || 'Invalid whole number';
 
                                     validators.integer = angular.bind(this, function(value) {
-                                                                                return fsUtil.isInt(value);
+                                                                                return !fsUtil.string(value).length || fsUtil.isInt(value);
                                                                             });
 
                                     messages.push('<ng-message when="integer">' + message + '</ng-message>');
@@ -354,7 +354,7 @@
                                     var message = input.attr('currency-message') || 'Invalid format';
 
                                     validators.currency = angular.bind(this, function(value) {
-                                                                                return fsUtil.isNumeric(value);
+                                                                                return !fsUtil.string(value).length || fsUtil.isNumeric(value);
                                                                             });
 
                                     messages.push('<ng-message when="currency">' + message + '</ng-message>');
