@@ -24,7 +24,7 @@
 
 
     angular.module('fs-angular-validate',['ngMessages','fs-angular-util','fs-angular-alert'])
-    .directive('fsValidate', function($parse, $compile, $q, $timeout, fsUtil, fsAlert, fsValidate) {
+    .directive('fsValidate', function($parse, $compile, $q, $timeout, fsUtil, fsAlert, fsValidate, $interpolate) {
         return {
             require: 'form',
             restrict: 'A',
@@ -242,12 +242,19 @@
                                 if(input.attr('required')!==undefined) {
 
                                     var message = input.attr('required-message') || 'Required';
+
+                                    validators.required = angular.bind(this, function(value) {
+                                                                                    return fsUtil.string(value).length;
+                                                                                });
+
                                     messages.push('<ng-message when="required">' + message + '</ng-message>');
                                 }
 
                                 if(input.attr('minlength')!==undefined) {
 
-                                    var message = input.attr('minlength-message') || 'The value must be at least ' + input.attr('minlength') + ' characters';
+                                    var message = input.attr('minlength-message') || 'The value must be at least {{minlength}} characters';
+
+                                    message = $interpolate(message)({ minlength: input.attr('minlength') });
 
                                     validators.minlength = angular.bind(this, function(length, value) {
                                                                                     return fsUtil.isEmpty(value) || String(value).length>=parseInt(length);
@@ -258,7 +265,9 @@
 
                                 if(input.attr('maxlength')!==undefined) {
 
-                                    var message = input.attr('maxlength-message') || 'The value exceeds ' + input.attr('maxlength') + ' characters';
+                                    var message = input.attr('maxlength-message') || 'The value exceeds {{maxlength}} characters';
+
+                                    message = $interpolate(message)({ maxlength: input.attr('maxlength') });
 
                                     validators.maxlength = angular.bind(this, function(length, value) {
                                                                                 return fsUtil.isEmpty(value) || String(value).length<=parseInt(length);
@@ -270,7 +279,9 @@
 
                                 if(input.attr('range')!==undefined) {
 
-                                    var message = input.attr('range-message') || 'Enter a value between ' + input.attr('min') + ' and ' + input.attr('max');
+                                    var message = input.attr('range-message') || 'Enter a value between {{min}} and {{max}}';
+
+                                    message = $interpolate(message)({ min: input.attr('min'), max: input.attr('max') });
 
                                     validators.max = null;
                                     validators.min = null;
@@ -306,7 +317,9 @@
 
                                 if(input.attr('min')!==undefined) {
 
-                                    var message = input.attr('min-message') || 'Enter a number greater then or equal to ' + String(input.attr('min'));
+                                    var message = input.attr('min-message') || 'Enter a number greater then or equal to {{min}}';
+
+                                    message = $interpolate(message)({ max: input.attr('min') });
 
                                     validators.min = angular.bind(this, function(min, value) {
                                                                                 return fsUtil.isEmpty(value) || value>=min;
@@ -317,7 +330,9 @@
 
                                 if(input.attr('max')!==undefined) {
 
-                                    var message = input.attr('max-message') || 'Enter a number less then or equal to ' + String(input.attr('max'));
+                                    var message = input.attr('max-message') || 'Enter a number less then or equal to {{max}}';
+
+                                    message = $interpolate(message)({ max: input.attr('max') });
 
                                     validators.max = angular.bind(this, function(max, value) {
                                                                                 return fsUtil.isEmpty(value) || value<max;
@@ -501,7 +516,7 @@
                                     var ngmessages = angular.element('<ng-messages ' +
                                                                         'name="' + name + '" ' +
                                                                         'md-auto-hide="false" ' +
-                                                                        'ng-if="(submitted || form[\'' + input.attr('name') + '\'].$touched)" ' +
+                                                                        'ng-show="(submitted || form[\'' + input.attr('name') + '\'].$touched)" ' +
                                                                         'for="form[\'' + input.attr('name') + '\'].$error">' + messages.join('') + '</ng-messages>');
 
                                     angular.element(container).append(ngmessages);
