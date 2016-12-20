@@ -28,9 +28,9 @@ form[fs-validate] ng-message {
     font-size: 12px;
     line-height: 14px;
     overflow: hidden;
-    opacity: 1;
-    margin-top: 0;
-    padding-top: 5px;   
-    color: #DD2C00; 
+    opacity: 1 !important;
+    margin-top: 0 !important;
+    padding-top: 5px;
+    color: #DD2C00;
     transition: 0s !important;
 }
