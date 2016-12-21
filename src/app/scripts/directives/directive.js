@@ -244,7 +244,7 @@
                                     var message = input.attr('required-message') || 'Required';
 
                                     validators.required = angular.bind(this, function(value) {
-                                                                                    return fsUtil.string(value).length;
+                                                                                    return !!fsUtil.string(value).length;
                                                                                 });
 
                                     messages.push('<ng-message when="required">' + message + '</ng-message>');
