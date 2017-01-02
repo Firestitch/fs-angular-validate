@@ -1,4 +1,5 @@
 
+
 (function () {
     'use strict';
 
@@ -201,6 +202,7 @@
                         }
 
                         function update() {
+
 							angular.forEach(element[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
 
                                 var messages = [];
@@ -221,13 +223,13 @@
                                 var name = input.attr('name');
                                 var controller = $scope.form[name];
 
-                                if(!controller || input.data('vs-validate')) {
+                                if(!controller || input.data('fs-validate')) {
                               		return;
                                 }
 
                                 var validators = controller.$validators;
 
-                                input.data('vs-validate',true);
+                                input.data('fs-validate',true);
 
                                 if(containerName==='md-datepicker-container' || containerName==='md-checkbox-container') {
                                     controller.element = container;
@@ -529,11 +531,17 @@
 						//HACK: In order to listen for new controls the code below has to override then
 						//      do some function switching and reseting.
 						function addControl(control) {
+
+							if(!control.$name) {
+								return;
+							}
+
 							try {
 								$scope.form.$addControl = $addControl;
 								$scope.form.$addControl(control);
 								$timeout(update);
 							} catch(e) {}
+
 							$scope.form.$addControl = addControl;
 						}
 
