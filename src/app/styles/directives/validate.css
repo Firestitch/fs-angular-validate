@@ -3,6 +3,16 @@ form[fs-validate] md-datepicker-container .md-datepicker-input-container.md-date
     border-color: rgb(221,44,0);
 }
 
+form[fs-validate] ng-messages {
+	display: none;
+}
+
+form[fs-validate] ng-messages.touched,
+form[fs-validate] ng-messages.submitted {
+	display: block;
+}
+
+
 form[fs-validate] md-datepicker-container ng-messages {
 	position: absolute;
     -webkit-order: 4;

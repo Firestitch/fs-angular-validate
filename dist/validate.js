@@ -493,20 +493,30 @@
                                     });
 
                                     controller.$setValidity('required', false);
-                                    validators.required = angular.bind(this, function(checkboxes, form) {
+                                    validators.required = angular.bind(this, function(checkboxes, form, container) {
 
-                                        var valid = false;
-
+                                        var valid = false, dirty = false;
                                         angular.forEach(checkboxes,function(checkbox) {
                                             var name = angular.element(checkbox).attr('name');
-                                            if(form[name].$viewValue) {
-                                                valid = true;
+                                            var item = form[name];
+                                            if(item) {
+                                            	if(item.$viewValue) {
+                                                	valid = true;
+                                                }
+
+                                                if(item.$dirty) {
+                                                	dirty = true;
+                                                }
                                             }
                                         });
 
+                                        if(dirty) {
+                                        	container.$setTouched();
+                                        }
+
                                         return valid;
 
-                                    },checkboxes, $scope.form);
+                                    },checkboxes, $scope.form, $scope.form[name]);
                                 }
 
                                 if(angular.element(container).attr('required')!==undefined) {
@@ -519,7 +529,7 @@
                                     var ngmessages = angular.element('<ng-messages ' +
                                                                         'name="' + name + '" ' +
                                                                         'md-auto-hide="false" ' +
-                                                                        'ng-show="(submitted || form[\'' + input.attr('name') + '\'].$touched)" ' +
+                                                                        'ng-class="{ submitted: submitted, touched: form[\'' + input.attr('name') + '\'].$touched }" ' +
                                                                         'for="form[\'' + input.attr('name') + '\'].$error">' + messages.join('') + '</ng-messages>');
 
                                     angular.element(container).append(ngmessages);
