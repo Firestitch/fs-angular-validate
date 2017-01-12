@@ -20,6 +20,8 @@
         return defer.promise;
     }
 
+    $scope.select = 1;
+
     $scope.reset = function() {
         $scope.formInstance.reset();
     }

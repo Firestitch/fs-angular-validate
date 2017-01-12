@@ -76,7 +76,7 @@
 
                         var element = angular.element(element);
                         element.on('submit', function(event) {
-
+$scope.submitted = true;
                             var validations = [];
                             angular.forEach(form,function(controller,key) {
 
@@ -151,9 +151,9 @@
                             element.attr('autocomplete','off');
                         }
 
-                        $scope.$watch('form.$submitted',function(value) {
+                        /*$scope.$watch('form.$submitted',function(value) {
                             $scope.submitted = value;
-                        },true);
+                        },true);*/
 
                         $scope.$error = function(objects) {
                             var error = {};
@@ -523,6 +523,9 @@
                                     var message = angular.element(container).attr('required-message') || 'Required';
                                     messages.push('<ng-message when="required">' + message + '</ng-message>');
                                 }
+
+                                //Prevalidate the form. Avoid required $error.required = true
+                                controller.$validate();
 
                                 if(messages.length)  {
 
