@@ -1,58 +1,55 @@
 <a href ng-click="hide = !hide">Toogle</a>
-<form fs-validate="submit()" fs-instance="formInstance">
 
+<form fs-validate="submit()" fs-instance="formInstance">
+<!--
      <md-input-container class="md-block">
             <label>Required</label>
-            <input type="text" ng-model="user.required" email="validateEmail">
+            <input type="text" ng-model="user.required" required="validateEmail">
         </md-input-container>
 
         <md-button ng-click="validateEmail = !validateEmail">activate </md-button>
+ -->
 
+    <div ng-show="hide">
 
+        <md-input-container class="md-block">
+            <label>Numeric</label>
+            <input type="text" ng-model="user.numeric" numeric>
+        </md-input-container>
 
+        <md-input-container class="md-block">
+            <label>Integer</label>
+            <input type="text" ng-model="user.integer" integer>
+        </md-input-container>
 
-<!--
-    <fs-lister ls-options="listerConf"></fs-lister>
+        <md-input-container class="md-block">
+            <label>Currency</label>
+            <input type="text" ng-model="user.currency" currency="USD">
+        </md-input-container>
 
-    <md-input-container class="md-block">
-        <label>Numeric</label>
-        <input type="text" ng-model="user.numeric" numeric>
-    </md-input-container>
+        <md-input-container class="md-block">
+            <label>Dropdown</label>
+            <md-select ng-model="select" required="required">
+              <md-option ng-repeat="value in [{ id: 1, name: 'One' },{ id: 2, name: 'Two' }]" value="{{value.id}}">
+                {{value.name}}
+              </md-option>
+            </md-select>
+        </md-input-container>
 
-    <md-input-container class="md-block">
-        <label>Integer</label>
-        <input type="text" ng-model="user.integer" integer>
-    </md-input-container>
+        <md-input-container class="md-block">
+            <label>Email</label>
+            <input type="text" ng-model="user.email" email>
+        </md-input-container>
 
-    <md-input-container class="md-block">
-        <label>Currency</label>
-        <input type="text" ng-model="user.currency" currency="USD">
-    </md-input-container>
+        <md-input-container class="md-block">
+            <label>Phone</label>
+            <input type="text" ng-model="user.tel" phone>
+        </md-input-container>
 
-    <md-input-container class="md-block">
-        <label>Dropdown</label>
-        <md-select ng-model="select" required="required">
-          <md-option ng-repeat="value in [{ id: 1, name: 'One' },{ id: 2, name: 'Two' }]" value="{{value.id}}">
-            {{value.name}}
-          </md-option>
-        </md-select>
-    </md-input-container>
-
-    <md-input-container class="md-block">
-        <label>Email</label>
-        <input type="text" ng-model="user.email" email>
-    </md-input-container>
-
-    <md-input-container class="md-block">
-        <label>Phone</label>
-        <input type="text" ng-model="user.tel" phone>
-    </md-input-container>
-
-     <md-input-container class="md-block">
+         <md-input-container class="md-block">
             <label>Required</label>
             <input type="text" ng-model="user.required" required>
         </md-input-container>
-
 
         <md-input-container class="md-block">
             <label>Email &amp; Required</label>
@@ -131,7 +128,9 @@
         </md-checkbox-container>
     </div>
 
- -->    <div class="button-toolbar" layout="row" layout-align="end center">
+    <fs-lister ls-options="listerConf"></fs-lister>
+
+    <div class="button-toolbar" layout="row" layout-align="end center">
         <md-button type="submit" class="md-primary">Submit</md-button>
         <md-button type="button" ng-click="reset()" class="md-primary">Reset</md-button>
     </div>

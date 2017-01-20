@@ -202,6 +202,10 @@
                             return form.$valid;
                         }
 
+                        function attr(el, name) {
+                        	return el[0].attributes[name] ? el[0].attributes[name].value : undefined;
+                        }
+
                         function update() {
 
 							angular.forEach(element[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
@@ -243,13 +247,13 @@
                                     input.attr('name',name);
                                 }
 
-                                if(input.attr('required')!==undefined) {
+                                if(attr(input,'required')!==undefined) {
 
-                                    var message = input.attr('required-message') || 'Required';
+                                    var message = attr(input,'required-message') || 'Required';
 
                                     validators.required = angular.bind(this, function(value) {
 
-                                    												if(input.attr('required') && !$scope.$parent.$eval(input.attr('required'))) {
+                                    												if(attr(input,'required') && !$scope.$parent.$eval(attr(input,'required'))) {
                                     													return true;
                                     												}
 
@@ -259,58 +263,58 @@
                                     messages.push('<ng-message when="required">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('minlength')!==undefined) {
+                                if(attr(input,'minlength')!==undefined) {
 
-                                    var message = input.attr('minlength-message') || 'The value must be at least {{minlength}} characters';
+                                    var message = attr(input,'minlength-message') || 'The value must be at least {{minlength}} characters';
 
-                                    message = $interpolate(message)({ minlength: input.attr('minlength') });
+                                    message = $interpolate(message)({ minlength: attr(input,'minlength') });
 
                                     validators.minlength = angular.bind(this, function(length, value) {
                                                                                     return fsUtil.isEmpty(value) || String(value).length>=parseInt(length);
-                                                                                },input.attr('minlength'));
+                                                                                },attr(input,'minlength'));
 
                                     messages.push('<ng-message when="minlength">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('maxlength')!==undefined) {
+                                if(attr(input,'maxlength')!==undefined) {
 
-                                    var message = input.attr('maxlength-message') || 'The value exceeds {{maxlength}} characters';
+                                    var message = attr(input,'maxlength-message') || 'The value exceeds {{maxlength}} characters';
 
-                                    message = $interpolate(message)({ maxlength: input.attr('maxlength') });
+                                    message = $interpolate(message)({ maxlength: attr(input,'maxlength') });
 
                                     validators.maxlength = angular.bind(this, function(length, value) {
                                                                                 return fsUtil.isEmpty(value) || String(value).length<=parseInt(length);
-                                                                            },input.attr('maxlength'));
+                                                                            },attr(input,'maxlength'));
 
                                     input.attr('maxlength',null);
                                     messages.push('<ng-message when="maxlength">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('range')!==undefined) {
+                                if(attr(input,'range')!==undefined) {
 
-                                    var message = input.attr('range-message') || 'Enter a value between {{min}} and {{max}}';
+                                    var message = attr(input,'range-message') || 'Enter a value between {{min}} and {{max}}';
 
-                                    message = $interpolate(message)({ min: input.attr('min'), max: input.attr('max') });
+                                    message = $interpolate(message)({ min: attr(input,'min'), max: attr(input,'max') });
 
                                     validators.max = null;
                                     validators.min = null;
 
                                     validators.range = angular.bind(this, function(min, max, value) {
                                                                                 return fsUtil.isEmpty(value) || (value>=min && value<=max);
-                                                                            },input.attr('min'),input.attr('max'));
+                                                                            },attr(input,'min'),attr(input,'max'));
 
                                     messages.push('<ng-message when="range">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('phone')!==undefined || input.attr('type')=='tel') {
+                                if(attr(input,'phone')!==undefined || attr(input,'type')=='tel') {
 
-                                    var message = input.attr('tel-message') || 'Enter a valid phone number';
+                                    var message = attr(input,'tel-message') || 'Enter a valid phone number';
 
                                     messages.push('<ng-message when="tel">' + message + '</ng-message>');
 
                                     validators.tel = function(value) {
 
-										if(input.attr('phone') && !$scope.$parent.$eval(input.attr('phone'))) {
+										if(attr(input,'phone') && !$scope.$parent.$eval(attr(input,'phone'))) {
                                     		return true;
 										}
 
@@ -318,15 +322,15 @@
                                     }
                                 }
 
-                                if(input.attr('email')!==undefined) {
+                                if(attr(input,'email')!==undefined) {
 
-                                    var message = input.attr('email-message') || 'Enter a valid email';
+                                    var message = attr(input,'email-message') || 'Enter a valid email';
 
                                     messages.push('<ng-message when="email">' + message + '</ng-message>');
 
                                     validators.email = function(value) {
 
-                                    	if(input.attr('email') && !$scope.$parent.$eval(input.attr('email'))) {
+                                    	if(attr(input,'email') && !$scope.$parent.$eval(attr(input,'email'))) {
                                     		return true;
                                     	}
 
@@ -334,35 +338,35 @@
                                     }
                                 }
 
-                                if(input.attr('min')!==undefined) {
+                                if(attr(input,'min')!==undefined) {
 
-                                    var message = input.attr('min-message') || 'Enter a number greater then or equal to {{min}}';
+                                    var message = attr(input,'min-message') || 'Enter a number greater then or equal to {{min}}';
 
-                                    message = $interpolate(message)({ max: input.attr('min') });
+                                    message = $interpolate(message)({ max: attr(input,'min') });
 
                                     validators.min = angular.bind(this, function(min, value) {
                                                                                 return fsUtil.isEmpty(value) || value>=min;
-                                                                            },input.attr('min'));
+                                                                            },attr(input,'min'));
 
                                     messages.push('<ng-message when="min">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('max')!==undefined) {
+                                if(attr(input,'max')!==undefined) {
 
-                                    var message = input.attr('max-message') || 'Enter a number less then or equal to {{max}}';
+                                    var message = attr(input,'max-message') || 'Enter a number less then or equal to {{max}}';
 
-                                    message = $interpolate(message)({ max: input.attr('max') });
+                                    message = $interpolate(message)({ max: attr(input,'max') });
 
                                     validators.max = angular.bind(this, function(max, value) {
                                                                                 return fsUtil.isEmpty(value) || value<max;
-                                                                            },input.attr('max'));
+                                                                            },attr(input,'max'));
 
                                     messages.push('<ng-message when="max">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('numeric')!==undefined) {
+                                if(attr(input,'numeric')!==undefined) {
 
-                                    var message = input.attr('numeric-message') || 'Invalid number';
+                                    var message = attr(input,'numeric-message') || 'Invalid number';
 
                                     validators.numeric = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isNumeric(value);
@@ -372,9 +376,9 @@
                                 }
 
 
-                                if(input.attr('integer')!==undefined) {
+                                if(attr(input,'integer')!==undefined) {
 
-                                    var message = input.attr('integer-message') || 'Invalid whole number';
+                                    var message = attr(input,'integer-message') || 'Invalid whole number';
 
                                     validators.integer = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isInt(value);
@@ -383,9 +387,9 @@
                                     messages.push('<ng-message when="integer">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('currency')!==undefined) {
+                                if(attr(input,'currency')!==undefined) {
 
-                                    var message = input.attr('currency-message') || 'Invalid format';
+                                    var message = attr(input,'currency-message') || 'Invalid format';
 
                                     validators.currency = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isNumeric(value);
@@ -394,17 +398,17 @@
                                     messages.push('<ng-message when="currency">' + message + '</ng-message>');
                                 }
 
-                                if(input.attr('compare')!==undefined) {
-                                    var message = input.attr('compare-message') || 'Mismatched value';
+                                if(attr(input,'compare')!==undefined) {
+                                    var message = attr(input,'compare-message') || 'Mismatched value';
 
-                                    $scope.$parent.$watch(input.attr('compare'),angular.bind(this, function(controller, password) {
+                                    $scope.$parent.$watch(attr(input,'compare'),angular.bind(this, function(controller, password) {
                                         controller.$validate();
                                     },controller));
 
                                     validators.compare = angular.bind(this, function(compareto, value) {
                                                                                 var compare = $scope.$parent.$eval(compareto);
                                                                                 return compare===value;
-                                                                            },input.attr('compare'));
+                                                                            },attr(input,'compare'));
 
                                     messages.push('<ng-message when="compare">' + message + '</ng-message>');
                                 }
@@ -413,11 +417,11 @@
 
                                 angular.forEach(['custom','custom-submit'],function(type) {
 
-                                    if(input.attr(type)===undefined) {
+                                    if(attr(input,type)===undefined) {
                                         return;
                                     }
 
-                                    messages.push('<ng-message when="' + type + '">' + (input.attr('custom-message') || '') + '</ng-message>');
+                                    messages.push('<ng-message when="' + type + '">' + (attr(input,'custom-message') || '') + '</ng-message>');
 
                                      if(type=='custom') {
                                         input.on('blur',function() {
@@ -428,7 +432,7 @@
                                     var custom = angular.bind(this,
                                         function(input, element, $scope, type, value, oldValue, submitting) {
 
-                                            if(input.attr('type')=='num') {
+                                            if(attr(input,'type')=='num') {
                                                 if(value===undefined) {
                                                     value = null;
                                                 }
@@ -446,7 +450,7 @@
                                                 }
 
                                                 var scope = input.data('scope') ? input.data('scope') : $scope.$parent;
-                                                var result = scope.$eval(input.attr(type));
+                                                var result = scope.$eval(attr(input,type));
 
                                                 try {
 
@@ -483,7 +487,7 @@
                                             },function(message) {
                                                 if(message) {
                                                     $timeout(function() {
-                                                       angular.element(element[0].querySelector('ng-messages[name="' + input.attr('name') + '"] ng-message[when="' + type + '"]'))
+                                                       angular.element(element[0].querySelector('ng-messages[name="' + attr(input,'name') + '"] ng-message[when="' + type + '"]'))
                                                         .text(message);
                                                     });
                                                 }
@@ -548,8 +552,8 @@
                                     var ngmessages = angular.element('<ng-messages ' +
                                                                         'name="' + name + '" ' +
                                                                         'md-auto-hide="false" ' +
-                                                                        'ng-class="{ submitted: submitted, touched: form[\'' + input.attr('name') + '\'].$touched }" ' +
-                                                                        'for="form[\'' + input.attr('name') + '\'].$error">' + messages.join('') + '</ng-messages>');
+                                                                        'ng-class="{ submitted: submitted, touched: form[\'' + attr(input,'name') + '\'].$touched }" ' +
+                                                                        'for="form[\'' + attr(input,'name') + '\'].$error">' + messages.join('') + '</ng-messages>');
 
                                     angular.element(container).append(ngmessages);
                                     $compile(ngmessages)($scope);

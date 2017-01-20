@@ -6,12 +6,13 @@
   "version": "0.0.0",
   "appPath": "app",
   "dependencies": {
-    "angular": "1.6.0",
+    "angular": "1.6.1",
     "angular-material": "1.1.1",
     "fs-angular-lister": "^1.0.0",
     "fs-angular-util": "^1.0.0",
     "fs-angular-alert": "^1.0.0",
     "fs-angular-api": "^1.0.0",
-    "angular-ui-router": "0.2.15"
+    "angular-ui-router": "0.3.2",
+    "fs-boilerplate-styles": "^1.0.0"
   }
 }
