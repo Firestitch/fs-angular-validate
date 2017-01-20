@@ -1,6 +1,17 @@
 <a href ng-click="hide = !hide">Toogle</a>
 <form fs-validate="submit()" fs-instance="formInstance">
 
+     <md-input-container class="md-block">
+            <label>Required</label>
+            <input type="text" ng-model="user.required" email="validateEmail">
+        </md-input-container>
+
+        <md-button ng-click="validateEmail = !validateEmail">activate </md-button>
+
+
+
+
+<!--
     <fs-lister ls-options="listerConf"></fs-lister>
 
     <md-input-container class="md-block">
@@ -120,7 +131,7 @@
         </md-checkbox-container>
     </div>
 
-    <div class="button-toolbar" layout="row" layout-align="end center">
+ -->    <div class="button-toolbar" layout="row" layout-align="end center">
         <md-button type="submit" class="md-primary">Submit</md-button>
         <md-button type="button" ng-click="reset()" class="md-primary">Reset</md-button>
     </div>

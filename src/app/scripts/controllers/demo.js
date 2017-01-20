@@ -9,6 +9,8 @@
     $scope.checkboxes = [{ name: 'Checkbox 1' },{ name: 'Checkbox 2' }];
     $scope.required = true;
 
+   	$scope.validateEmail = false;
+
     $scope.asyncCustomSubmit = function() {
         var defer = $q.defer();
 

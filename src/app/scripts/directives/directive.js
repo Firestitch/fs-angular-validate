@@ -75,7 +75,8 @@
 
                         var element = angular.element(element);
                         element.on('submit', function(event) {
-$scope.submitted = true;
+
+							$scope.submitted = true;
                             var validations = [];
                             angular.forEach(form,function(controller,key) {
 
@@ -246,6 +247,11 @@ $scope.submitted = true;
                                     var message = input.attr('required-message') || 'Required';
 
                                     validators.required = angular.bind(this, function(value) {
+
+                                    												if(input.attr('required') && !$scope.$parent.$eval(input.attr('required'))) {
+                                    													return true;
+                                    												}
+
                                                                                     return !!fsUtil.string(value).length;
                                                                                 });
 
@@ -302,6 +308,11 @@ $scope.submitted = true;
                                     messages.push('<ng-message when="tel">' + message + '</ng-message>');
 
                                     validators.tel = function(value) {
+
+										if(input.attr('phone') && !$scope.$parent.$eval(input.attr('phone'))) {
+                                    		return true;
+										}
+
                                     	return fsValidate.phone(value);
                                     }
                                 }
@@ -313,6 +324,11 @@ $scope.submitted = true;
                                     messages.push('<ng-message when="email">' + message + '</ng-message>');
 
                                     validators.email = function(value) {
+
+                                    	if(input.attr('email') && !$scope.$parent.$eval(input.attr('email'))) {
+                                    		return true;
+                                    	}
+
                                     	return fsValidate.email(value);
                                     }
                                 }
