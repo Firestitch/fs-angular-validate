@@ -1,4 +1,3 @@
-
 (function () {
     'use strict';
 
@@ -73,6 +72,8 @@
                                            	validate: validate,
                                            	update: update };
 
+                        form.instance = $scope.instance;
+
                         var element = angular.element(element);
                         element.on('submit', function(event) {
 
@@ -84,21 +85,27 @@
 
                                     if(visible(controller.element)) {
 
-                                        if(controller.$asyncValidators && controller.$asyncValidators['custom-submit']) {
+                                        if(controller.$asyncValidators) {
 
-                                            var validator = controller.$asyncValidators['custom-submit'];
+                                        	angular.forEach(controller.$asyncValidators,function(validator,name) {
 
-                                            validations.push(validator(controller.$viewValue,controller.$viewValue,true)
-                                                                .then(function() {
-                                                                    controller.$setValidity('custom-submit', true);
-                                                                },function() {
-                                                                    controller.$setValidity('custom-submit', false);
-                                                                }));
-                                        } else {
-                                            controller.$validate();
+	                                            validations.push(	validator(controller.$viewValue,controller.$viewValue,true)
+	                                                                .then(function() {
+	                                                                    controller.$setValidity(name, true);
+	                                                                },function() {
+	                                                                    controller.$setValidity(name, false);
+	                                                                }));
+	                                        });
+
+                                        } else if(controller.$validators) {
+                                            angular.forEach(controller.$validators,function(validator,name) {
+                                            	controller.$setValidity(name, validator.$validate());
+                                            });
                                         }
 
                                     } else {
+
+                                    	//If there are any unaccounted for controllers (no element attached) then mark it as valid
                                         angular.forEach(controller.$validators,function(value,name) {
                                             controller.$setValidity(name,true);
                                         });
@@ -168,6 +175,7 @@
                         }
 
                         function visible(el) {
+
                             try {
 
                                 var style = window.getComputedStyle(el,null);
@@ -184,17 +192,30 @@
                             return true;
                         }
 
-                        function reset() {
-                            form.$setPristine();
-                            form.$setUntouched();
-                            $scope.submitted = false;
+                        function reset(name) {
+
+                        	if(name) {
+                        		var model = form[name];
+                        		if(model) {
+		                            model.$setPristine();
+		                            model.$setUntouched();
+		                            model.$setViewValue('');
+		                        }
+	                        } else {
+	                        	form.$setPristine();
+	                            form.$setUntouched();
+	                            $scope.submitted = false;
+	                        }
                         }
 
-						function validate() {
-                            angular.forEach(form.$error, function(error) {
+						function validate(name) {
+
+                            angular.forEach(form.$error, function(error,field) {
                                 angular.forEach(error, function(field) {
-                                    field.$setDirty();
-                                    field.$setTouched();
+                                	if(!name || field.$name==name) {
+	                                    field.$validate();
+	                                    //field.$setTouched();
+	                                }
                                 });
                             });
 
@@ -226,6 +247,7 @@
                                 var input = angular.element(input);
                                 var name = input.attr('name');
                                 var controller = $scope.form[name];
+                                var scope = input.data('scope') ? input.data('scope') : $scope.$parent;
 
                                 if(!controller || input.data('fs-validate')) {
                               		return;
@@ -252,7 +274,9 @@
 
                                     validators.required = angular.bind(this, function(value) {
 
-                                    												if(attr(input,'required') && !$scope.$parent.$eval(attr(input,'required'))) {
+                                    												var required = attr(input,'ng-required') ? attr(input,'ng-required') : attr(input,'required');
+
+                                    												if(required && !scope.$eval(required)) {
                                     													return true;
                                     												}
 
@@ -448,7 +472,6 @@
                                                     return resolve();
                                                 }
 
-                                                var scope = input.data('scope') ? input.data('scope') : $scope.$parent;
                                                 var result = scope.$eval(attr(input,type));
 
                                                 try {
