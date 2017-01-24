@@ -12,14 +12,13 @@
    	$scope.validateEmail = false;
 
     $scope.asyncCustomSubmit = function() {
-        var defer = $q.defer();
+        return $q(function(resolve,reject) {
+	        if($scope.user.asynccustomsubmit=='123123')
+	            resolve();
+	        else
+	            reject("The the value for Asynchronous Custom Submit is not equal to 123123");
 
-        if($scope.user.asynccustomsubmit=='123123')
-            defer.resolve();
-        else
-            defer.reject("The the value for Asynchronous Custom Submit is not equal to 123123");
-
-        return defer.promise;
+        });
     }
 
     $scope.select = 1;

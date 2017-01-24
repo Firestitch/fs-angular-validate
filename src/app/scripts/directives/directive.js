@@ -1,3 +1,4 @@
+
 (function () {
     'use strict';
 
@@ -64,44 +65,45 @@
 
                     pre: function($scope, element, attrs, form) {
 
-                        $scope.form = form;
-                        $scope.models = {};
-                        $scope.$parent.submitting = false;
-                        $scope.instance = { form: form,
-                                            reset: reset,
-                                           	validate: validate,
-                                           	update: update };
+                    	var instance = {form: form,
+                                        reset: reset,
+                                      	validate: validate,
+                                       	update: update };
 
-                        form.instance = $scope.instance;
+                        form.$submitting = false;
+                        form.$submited = false;
+                        form.instance = instance;
+						$scope.form = form;
+                        $scope.models = {};
+                        $scope.instance = instance;
 
                         var element = angular.element(element);
                         element.on('submit', function(event) {
 
-							$scope.submitted = true;
-                            var validations = [];
+                            var promises = [];
+                            form.$submitting = true;
+                           	form.$submitted = true;
                             angular.forEach(form,function(controller,key) {
 
                                 if(controller && controller.element) {
 
                                     if(visible(controller.element)) {
 
-                                        if(controller.$asyncValidators) {
+                                        controller.$validate();
 
-                                        	angular.forEach(controller.$asyncValidators,function(validator,name) {
+                                        if(!fsUtil.isEmpty(controller.$asyncValidators)) {
 
-	                                            validations.push(	validator(controller.$viewValue,controller.$viewValue,true)
-	                                                                .then(function() {
-	                                                                    controller.$setValidity(name, true);
-	                                                                },function() {
-	                                                                    controller.$setValidity(name, false);
-	                                                                }));
-	                                        });
-
-                                        } else if(controller.$validators) {
-                                            angular.forEach(controller.$validators,function(validator,name) {
-                                            	controller.$setValidity(name, validator.$validate());
-                                            });
-                                        }
+	                                        //HACK: Detects when the asyncValidators promises have completed.
+	                                        //This is because angular validate doesn't expose the async promises
+	                                        promises.push($q(function(resolve) {
+	                                        	var watch = $scope.$watch(function() {
+	                                        		if(controller.$pending===undefined) {
+	                                        			resolve();
+	                                        			watch();
+	                                        		}
+	                                        	});
+	                                        }));
+	                                    }
 
                                     } else {
 
@@ -113,65 +115,54 @@
                                 }
                             });
 
-                            $q.all(validations)
+                            $q.all(promises)
                             .then(function() {
-                                $scope.$parent.submitting = true;
 
-                                var submits = angular.element(element[0].querySelectorAll('button[type="submit"]'));
+                            	$q(function(resolve) {
 
-                                if(form.$valid) {
-                                    submits.attr('disabled','disabled');
+	                                if(form.$valid) {
 
-                                    var submitted = function() {
-                                        $timeout(function() {
-                                            $scope.$parent.submitting = false;
-                                            submits.removeAttr('disabled');
-                                        },500);
-                                    }
+	                                	var result = null;
+	                                    if($scope.onsubmit) {
+	                                        result = $scope.$parent.$eval($scope.onsubmit);
 
-                                    if($scope.onsubmit) {
-                                        var result = $scope.$parent.$eval($scope.onsubmit);
+	                                        if(angular.isObject(result) && result.then) {
+	                                            result.then(resolve);
+	                                        }
+	                                    }
 
-                                        if(angular.isObject(result) && result.then) {
-                                            result.then(function() {
-                                                submitted();
-                                            });
-                                        } else {
-                                            submitted();
-                                        }
-                                    }
+	                                    if(!result) {
+	                                    	resolve();
+	                                    }
 
-                                } else {
-                                    var el = angular.element(element[0].querySelector('.ng-invalid'))[0];
+	                                } else {
+	                                    var el = angular.element(element[0].querySelector('.ng-invalid'))[0];
 
-                                    if(el) {
-                                        el.focus();
-                                    }
+	                                    if(el) {;
+	                                        el.focus();
+	                                    }
 
-                                    fsAlert.error('Changes not saved.  Please review errors highlighted in red.',{ mode: 'toast' });
-                                }
+	                                    fsAlert.error('Changes not saved.  Please review errors highlighted in red.',{ mode: 'toast' });
+	                                    resolve();
+	                                }
+
+	                            }).then(function() {
+
+	                            	var submits = angular.element(element[0].querySelectorAll('button[type="submit"]'));
+	                            	submits.removeAttr('disabled');
+
+	                            	$timeout(function() {
+                                        submits.removeAttr('disabled');
+                                    },500);
+
+	                            	form.$submitting = false;
+	                            });
                             });
 
                         }).attr('novalidate','novalidate');
 
                         if($scope.autocomplete===undefined) {
                             element.attr('autocomplete','off');
-                        }
-
-                        /*$scope.$watch('form.$submitted',function(value) {
-                            $scope.submitted = value;
-                        },true);*/
-
-                        $scope.$error = function(objects) {
-                            var error = {};
-
-                            angular.forEach(objects,function(object) {
-                                angular.forEach(object.$error,function(value, key) {
-                                    error[key] = value;
-                                });
-                            });
-
-                            return error;
                         }
 
                         function visible(el) {
@@ -199,12 +190,10 @@
                         		if(model) {
 		                            model.$setPristine();
 		                            model.$setUntouched();
-		                            model.$setViewValue('');
 		                        }
 	                        } else {
 	                        	form.$setPristine();
 	                            form.$setUntouched();
-	                            $scope.submitted = false;
 	                        }
                         }
 
@@ -214,7 +203,6 @@
                                 angular.forEach(error, function(field) {
                                 	if(!name || field.$name==name) {
 	                                    field.$validate();
-	                                    //field.$setTouched();
 	                                }
                                 });
                             });
@@ -446,14 +434,14 @@
 
                                     messages.push('<ng-message when="' + type + '">' + (attr(input,'custom-message') || '') + '</ng-message>');
 
-                                     if(type=='custom') {
+                                    if(type=='custom') {
                                         input.on('blur',function() {
                                             controller.$validate();
                                         });
                                     }
 
                                     var custom = angular.bind(this,
-                                        function(input, element, $scope, type, value, oldValue, submitting) {
+                                        function(input, element, form, type, value, oldValue) {
 
                                             if(attr(input,'type')=='num') {
                                                 if(value===undefined) {
@@ -468,7 +456,7 @@
                                             var promise = $q(function(resolve,reject) {
 
                                                  // Only process a custom-submit validator when called from on('submit')
-                                                if(type=='custom-submit' && !submitting) {
+                                                if(type=='custom-submit' && !form.$submitting) {
                                                     return resolve();
                                                 }
 
@@ -517,7 +505,7 @@
                                             });
 
                                             return promise;
-                                    },input, element, $scope, type);
+                                    },input, element, $scope.form, type);
 
                                     $scope.form[name].$asyncValidators[type] = custom;
                                 });
@@ -574,7 +562,7 @@
                                     var ngmessages = angular.element('<ng-messages ' +
                                                                         'name="' + name + '" ' +
                                                                         'md-auto-hide="false" ' +
-                                                                        'ng-class="{ submitted: submitted, touched: form[\'' + attr(input,'name') + '\'].$touched }" ' +
+                                                                        'ng-class="{ submitted: form.$submitted, touched: form[\'' + attr(input,'name') + '\'].$touched }" ' +
                                                                         'for="form[\'' + attr(input,'name') + '\'].$error">' + messages.join('') + '</ng-messages>');
 
                                     angular.element(container).append(ngmessages);

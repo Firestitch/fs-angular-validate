@@ -10,7 +10,7 @@
         <md-button ng-click="validateEmail = !validateEmail">activate </md-button>
  -->
 
-    <div ng-show="hide">
+    <div ng-hide="hide">
 
         <md-input-container class="md-block">
             <label>Numeric</label>
@@ -126,9 +126,10 @@
                 </md-checkbox>
             </div>
         </md-checkbox-container>
+
+        <!-- <fs-lister ls-options="listerConf"></fs-lister> -->
     </div>
 
-    <fs-lister ls-options="listerConf"></fs-lister>
 
     <div class="button-toolbar" layout="row" layout-align="end center">
         <md-button type="submit" class="md-primary">Submit</md-button>
