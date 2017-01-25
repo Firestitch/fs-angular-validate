@@ -277,7 +277,7 @@
 
                                 if(attr(input,'minlength')!==undefined) {
 
-                                    var message = attr(input,'minlength-message') || 'The value must be at least {{minlength}} characters';
+                                    var message = attr(input,'minlength-message') || 'Must be at least {{minlength}} characters';
 
                                     message = $interpolate(message)({ minlength: attr(input,'minlength') });
 
@@ -290,7 +290,7 @@
 
                                 if(attr(input,'maxlength')!==undefined) {
 
-                                    var message = attr(input,'maxlength-message') || 'The value exceeds {{maxlength}} characters';
+                                    var message = attr(input,'maxlength-message') || 'Must be no greater than {{maxlength}} characters';
 
                                     message = $interpolate(message)({ maxlength: attr(input,'maxlength') });
 
@@ -304,7 +304,7 @@
 
                                 if(attr(input,'equallength')!==undefined) {
 
-                                    var message = attr(input,'equallength-message') || 'The value needs to be {{equallength}} characters';
+                                    var message = attr(input,'equallength-message') || 'Must be {{equallength}} characters';
 
                                     message = $interpolate(message)({ equallength: attr(input,'equallength') });
 
@@ -312,12 +312,12 @@
                                                                                 return !fsUtil.string(value).length || String(value).length==parseInt(length);
                                                                             },attr(input,'equallength'));
 
-                                    messages.push('<ng-message when="maxlength">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="equallength">' + message + '</ng-message>');
                                 }
 
                                 if(attr(input,'range')!==undefined) {
 
-                                    var message = attr(input,'range-message') || 'Enter a value between {{min}} and {{max}}';
+                                    var message = attr(input,'range-message') || 'Must be a number between {{min}} and {{max}}';
 
                                     message = $interpolate(message)({ min: attr(input,'min'), max: attr(input,'max') });
 
@@ -333,7 +333,7 @@
 
                                 if(attr(input,'phone')!==undefined || attr(input,'type')=='tel') {
 
-                                    var message = attr(input,'tel-message') || 'Enter a valid phone number';
+                                    var message = attr(input,'tel-message') || 'Must be a valid phone number';
 
                                     messages.push('<ng-message when="tel">' + message + '</ng-message>');
 
@@ -349,7 +349,7 @@
 
                                 if(attr(input,'email')!==undefined) {
 
-                                    var message = attr(input,'email-message') || 'Enter a valid email';
+                                    var message = attr(input,'email-message') || 'Must be a valid email';
 
                                     messages.push('<ng-message when="email">' + message + '</ng-message>');
 
@@ -365,7 +365,7 @@
 
                                 if(attr(input,'min')!==undefined) {
 
-                                    var message = attr(input,'min-message') || 'Enter a number greater then or equal to {{min}}';
+                                    var message = attr(input,'min-message') || 'Must be a number greater than or equal to {{min}}';
 
                                     message = $interpolate(message)({ min: attr(input,'min') });
 
@@ -378,7 +378,7 @@
 
                                 if(attr(input,'max')!==undefined) {
 
-                                    var message = attr(input,'max-message') || 'Enter a number less then or equal to {{max}}';
+                                    var message = attr(input,'max-message') || 'Must be a number less than or equal to {{max}}';
 
                                     message = $interpolate(message)({ max: attr(input,'max') });
 
@@ -391,7 +391,7 @@
 
                                 if(attr(input,'numeric')!==undefined) {
 
-                                    var message = attr(input,'numeric-message') || 'Invalid number';
+                                    var message = attr(input,'numeric-message') || 'Must be a valid number';
 
                                     validators.numeric = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isNumeric(value);
@@ -403,7 +403,7 @@
 
                                 if(attr(input,'integer')!==undefined) {
 
-                                    var message = attr(input,'integer-message') || 'Invalid whole number';
+                                    var message = attr(input,'integer-message') || 'Must be a whole number';
 
                                     validators.integer = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isInt(value);
@@ -414,7 +414,7 @@
 
                                 if(attr(input,'currency')!==undefined) {
 
-                                    var message = attr(input,'currency-message') || 'Invalid format';
+                                    var message = attr(input,'currency-message') || 'Must be a valid currency';
 
                                     validators.currency = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isNumeric(value);
