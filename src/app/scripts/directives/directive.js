@@ -301,6 +301,19 @@
                                     messages.push('<ng-message when="maxlength">' + message + '</ng-message>');
                                 }
 
+                                if(attr(input,'equallength')!==undefined) {
+
+                                    var message = attr(input,'equallength-message') || 'The value needs to be {{equallength}} characters';
+
+                                    message = $interpolate(message)({ equallength: attr(input,'equallength') });
+
+                                    validators.equallength = angular.bind(this, function(length, value) {
+                                                                                return !fsUtil.string(value).length || String(value).length==parseInt(length);
+                                                                            },attr(input,'equallength'));
+
+                                    messages.push('<ng-message when="equallength">' + message + '</ng-message>');
+                                }
+
                                 if(attr(input,'range')!==undefined) {
 
                                     var message = attr(input,'range-message') || 'Enter a value between {{min}} and {{max}}';
