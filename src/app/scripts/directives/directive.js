@@ -281,7 +281,7 @@
                                     message = $interpolate(message)({ minlength: attr(input,'minlength') });
 
                                     validators.minlength = angular.bind(this, function(length, value) {
-                                                                                    return fsUtil.isEmpty(value) || String(value).length>=parseInt(length);
+                                                                                    return !fsUtil.string(value).length || String(value).length>=parseInt(length);
                                                                                 },attr(input,'minlength'));
 
                                     messages.push('<ng-message when="minlength">' + message + '</ng-message>');
@@ -294,7 +294,7 @@
                                     message = $interpolate(message)({ maxlength: attr(input,'maxlength') });
 
                                     validators.maxlength = angular.bind(this, function(length, value) {
-                                                                                return fsUtil.isEmpty(value) || String(value).length<=parseInt(length);
+                                                                                return !fsUtil.string(value).length || String(value).length<=parseInt(length);
                                                                             },attr(input,'maxlength'));
 
                                     input.attr('maxlength',null);
@@ -311,7 +311,7 @@
                                     validators.min = null;
 
                                     validators.range = angular.bind(this, function(min, max, value) {
-                                                                                return fsUtil.isEmpty(value) || (value>=min && value<=max);
+                                                                                return !fsUtil.string(value).length || (value>=min && value<=max);
                                                                             },attr(input,'min'),attr(input,'max'));
 
                                     messages.push('<ng-message when="range">' + message + '</ng-message>');
@@ -329,7 +329,7 @@
                                     		return true;
 										}
 
-                                    	return fsValidate.phone(value);
+                                    	return !fsUtil.string(value).length || fsValidate.phone(value);
                                     }
                                 }
 
@@ -345,7 +345,7 @@
                                     		return true;
                                     	}
 
-                                    	return fsValidate.email(value);
+                                    	return !fsUtil.string(value).length || fsValidate.email(value);
                                     }
                                 }
 
@@ -353,10 +353,10 @@
 
                                     var message = attr(input,'min-message') || 'Enter a number greater then or equal to {{min}}';
 
-                                    message = $interpolate(message)({ max: attr(input,'min') });
+                                    message = $interpolate(message)({ min: attr(input,'min') });
 
                                     validators.min = angular.bind(this, function(min, value) {
-                                                                                return fsUtil.isEmpty(value) || value>=min;
+                                                                                return !fsUtil.string(value).length || value>=min;
                                                                             },attr(input,'min'));
 
                                     messages.push('<ng-message when="min">' + message + '</ng-message>');
@@ -369,7 +369,7 @@
                                     message = $interpolate(message)({ max: attr(input,'max') });
 
                                     validators.max = angular.bind(this, function(max, value) {
-                                                                                return fsUtil.isEmpty(value) || value<max;
+                                                                                return !fsUtil.string(value).length || value<max;
                                                                             },attr(input,'max'));
 
                                     messages.push('<ng-message when="max">' + message + '</ng-message>');
