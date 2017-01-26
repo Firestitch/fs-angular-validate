@@ -1,5 +1,6 @@
 
 
+
 (function () {
     'use strict';
 
@@ -211,8 +212,15 @@
                             return form.$valid;
                         }
 
-                        function attr(el, name) {
-                        	return el[0].attributes[name] ? el[0].attributes[name].value : undefined;
+
+                        function attr(el, name, value) {
+
+                    		if(arguments.length==2) {
+                    			var attr = el[0].attributes[name];
+                    			return attr ? attr.value : undefined;
+                    		}
+
+                   			el[0].setAttribute(name,value);
                         }
 
                         function update() {
@@ -259,12 +267,21 @@
 
                                 if(attr(input,'required')!==undefined) {
 
-                                	var required = true;
+                               		var required = true;
                                     if(attr(input,'required')) {
-                                    	parentScope.$watch(attr(input,'required'),function(value,prev) {
+
+                                    	var scope = input.data('required-scope') ? input.data('required-scope') : parentScope;
+                                    	scope.$watch(attr(input,'required'),function(value,prev) {
+
                                     		required = value;
-                                    		if(value!==prev) {
-                                    			controller.$validate();
+                                    		controller.$validate();
+
+                                    		if(required) {
+                                    			angular.element(container.querySelector('label')).addClass('md-required');
+                                    			angular.element(container.querySelector('md-select')).removeClass('md-no-asterisk');
+                                    		} else {
+                                    			angular.element(container.querySelector('label')).removeClass('md-required');
+                                    			angular.element(container.querySelector('md-select')).addClass('md-no-asterisk');
                                     		}
                                     	});
                                     }
@@ -452,7 +469,8 @@
                                                     return resolve();
                                                 }
 
-                                                var result = parentScope.$eval(attr(input,type));
+                                                var scope = input.data('custom-scope') ? input.data('custom-scope') : parentScope;
+                                                var result = scope.$eval(attr(input,type));
 
                                                 try {
 
