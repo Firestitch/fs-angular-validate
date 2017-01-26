@@ -235,7 +235,7 @@
                                 var input = angular.element(input);
                                 var name = input.attr('name');
                                 var controller = $scope.form[name];
-                                var scope = input.data('scope') ? input.data('scope') : $scope.$parent;
+                                var parentScope = $scope.$parent;
 
                                 if(!controller || input.data('fs-validate')) {
                               		return;
@@ -258,20 +258,21 @@
 
                                 if(attr(input,'required')!==undefined) {
 
-                                    var message = attr(input,'required-message') || 'Required';
+                                	var required = true;
+                                    if(attr(input,'required')) {
+                                    	parentScope.$watch(attr(input,'required'),function(value,prev) {
+                                    		required = value;
+                                    		if(value!==prev) {
+                                    			controller.$validate();
+                                    		}
+                                    	});
+                                    }
 
                                     validators.required = angular.bind(this, function(value) {
-
-                                    												var required = attr(input,'ng-required') ? attr(input,'ng-required') : attr(input,'required');
-
-                                    												if(required && !scope.$eval(required)) {
-                                    													return true;
-                                    												}
-
-                                                                                    return !!fsUtil.string(value).length;
+                                                                                    return !required || !!fsUtil.string(value).length;
                                                                                 });
 
-                                    messages.push('<ng-message when="required">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="required">' + (attr(input,'required-message') || 'Required') + '</ng-message>');
                                 }
 
                                 if(attr(input,'minlength')!==undefined) {
@@ -332,32 +333,18 @@
 
                                 if(attr(input,'phone')!==undefined || attr(input,'type')=='tel') {
 
-                                    var message = attr(input,'tel-message') || 'Must be a valid phone number';
-
-                                    messages.push('<ng-message when="tel">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="tel">' + (attr(input,'tel-message') || 'Must be a valid phone number') + '</ng-message>');
 
                                     validators.tel = function(value) {
-
-										if(attr(input,'phone') && !$scope.$parent.$eval(attr(input,'phone'))) {
-                                    		return true;
-										}
-
                                     	return !fsUtil.string(value).length || fsValidate.phone(value);
                                     }
                                 }
 
                                 if(attr(input,'email')!==undefined) {
 
-                                    var message = attr(input,'email-message') || 'Must be a valid email';
-
-                                    messages.push('<ng-message when="email">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="email">' + (attr(input,'email-message') || 'Must be a valid email') + '</ng-message>');
 
                                     validators.email = function(value) {
-
-                                    	if(attr(input,'email') && !$scope.$parent.$eval(attr(input,'email'))) {
-                                    		return true;
-                                    	}
-
                                     	return !fsUtil.string(value).length || fsValidate.email(value);
                                     }
                                 }
@@ -390,54 +377,45 @@
 
                                 if(attr(input,'numeric')!==undefined) {
 
-                                    var message = attr(input,'numeric-message') || 'Must be a valid number';
-
                                     validators.numeric = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isNumeric(value);
                                                                             });
 
-                                    messages.push('<ng-message when="numeric">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="numeric">' + (attr(input,'numeric-message') || 'Must be a valid number') + '</ng-message>');
                                 }
 
 
                                 if(attr(input,'integer')!==undefined) {
 
-                                    var message = attr(input,'integer-message') || 'Must be a whole number';
-
                                     validators.integer = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isInt(value);
                                                                             });
 
-                                    messages.push('<ng-message when="integer">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="integer">' + (attr(input,'integer-message') || 'Must be a whole number') + '</ng-message>');
                                 }
 
                                 if(attr(input,'currency')!==undefined) {
-
-                                    var message = attr(input,'currency-message') || 'Must be a valid currency';
 
                                     validators.currency = angular.bind(this, function(value) {
                                                                                 return !fsUtil.string(value).length || fsUtil.isNumeric(value);
                                                                             });
 
-                                    messages.push('<ng-message when="currency">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="currency">' + (attr(input,'currency-message') || 'Must be a valid currency') + '</ng-message>');
                                 }
 
                                 if(attr(input,'compare')!==undefined) {
-                                    var message = attr(input,'compare-message') || 'Mismatched value';
 
-                                    $scope.$parent.$watch(attr(input,'compare'),angular.bind(this, function(controller, password) {
+                                    parentScope.$watch(attr(input,'compare'),angular.bind(this, function(controller, password) {
                                         controller.$validate();
                                     },controller));
 
                                     validators.compare = angular.bind(this, function(compareto, value) {
-                                                                                var compare = $scope.$parent.$eval(compareto);
+                                                                                var compare = parentScope.$eval(compareto);
                                                                                 return compare===value;
                                                                             },attr(input,'compare'));
 
-                                    messages.push('<ng-message when="compare">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="compare">' + (attr(input,'compare-message') || 'Mismatched value') + '</ng-message>');
                                 }
-
-
 
                                 angular.forEach(['custom','custom-submit'],function(type) {
 
@@ -473,7 +451,7 @@
                                                     return resolve();
                                                 }
 
-                                                var result = scope.$eval(attr(input,type));
+                                                var result = parentScope.$eval(attr(input,type));
 
                                                 try {
 
@@ -563,8 +541,7 @@
                                 }
 
                                 if(angular.element(container).attr('required')!==undefined) {
-                                    var message = angular.element(container).attr('required-message') || 'Required';
-                                    messages.push('<ng-message when="required">' + message + '</ng-message>');
+                                    messages.push('<ng-message when="required">' + (angular.element(container).attr('required-message') || 'Required') + '</ng-message>');
                                 }
 
                                 //Prevalidate the form. Avoid required $error.required = true

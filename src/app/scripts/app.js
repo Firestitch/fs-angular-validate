@@ -7,7 +7,9 @@ angular
     'ngMaterial',
     'fs-angular-validate',
     'fs-angular-lister',
-    'fs-angular-api'
+    'fs-angular-api',
+    'fs-angular-phone',
+    'fs-angular-time'
 ])
 .config(function ($stateProvider, $urlRouterProvider) {
 

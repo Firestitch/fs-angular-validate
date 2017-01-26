@@ -1,16 +1,25 @@
-<a href ng-click="hide = !hide">Toogle</a>
+<md-button ng-click="hide = !hide" class="md-raised md-accent">Toogle Visible</md-button>
+<md-button ng-click="required1 = !required1" class="md-raised md-accent">Requiring {{required1 ? 'All' : 'No'}} Fields</md-button>
 
 <form fs-validate="submit()" fs-instance="formInstance">
-<!--
-     <md-input-container class="md-block">
-            <label>Required</label>
-            <input type="text" ng-model="user.required" required="validateEmail">
-        </md-input-container>
 
-        <md-button ng-click="validateEmail = !validateEmail">activate </md-button>
- -->
 
     <div ng-hide="hide">
+
+
+       <md-input-container class="md-block">
+            <label>Always Required</label>
+            <input type="text" ng-model="user.required" required>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Dynamic Required</label>
+            <input type="text" ng-model="user.required" required="required1">
+        </md-input-container>
+
+
+        <fs-phone fs-model="user.fsphone" fs-label="Phone" fs-required="required1"></fs-phone>
+        <fs-time fs-model="user.fstime" fs-label="Time" fs-required="required1" sfs-hint="Time Hint"></fs-time>
 
         <md-input-container class="md-block">
             <label>Numeric</label>
@@ -29,7 +38,7 @@
 
         <md-input-container class="md-block">
             <label>Dropdown</label>
-            <md-select ng-model="select" required="required">
+            <md-select ng-model="select" required="required1">
               <md-option ng-repeat="value in [{ id: 1, name: 'One' },{ id: 2, name: 'Two' }]" value="{{value.id}}">
                 {{value.name}}
               </md-option>
@@ -44,11 +53,6 @@
         <md-input-container class="md-block">
             <label>Phone</label>
             <input type="text" ng-model="user.tel" phone>
-        </md-input-container>
-
-         <md-input-container class="md-block">
-            <label>Required</label>
-            <input type="text" ng-model="user.required" required>
         </md-input-container>
 
         <md-input-container class="md-block">
@@ -73,7 +77,7 @@
 
         <md-input-container class="md-block">
             <label>Min Length</label>
-            <input type="text" minlength="10" ng-model="user.minlength"  required />
+            <input type="text" minlength="10" ng-model="user.minlength" required="required1" />
         </md-input-container>
 
         <md-input-container class="md-block">
@@ -102,7 +106,7 @@
 
         <md-input-container class="md-block">
             <label>Required Textarea</label>
-            <textarea ng-model="user.requiredtextarea" required></textarea>
+            <textarea ng-model="user.requiredtextarea" required="required1"></textarea>
         </md-input-container>
 
         <div layout="row">

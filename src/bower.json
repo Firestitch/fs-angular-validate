@@ -12,6 +12,8 @@
     "fs-angular-util": "^1.0.0",
     "fs-angular-alert": "^1.0.0",
     "fs-angular-api": "^1.0.0",
+    "fs-angular-phone": "^1.0.0",
+    "fs-angular-time": "^1.0.0",
     "angular-ui-router": "0.3.2",
     "fs-boilerplate-styles": "^1.0.0"
   }

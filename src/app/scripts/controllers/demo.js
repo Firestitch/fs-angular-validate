@@ -4,10 +4,10 @@
 angular.module('app')
   .controller('DemoCtrl', function ($scope, $q, dummyService, $timeout) {
 
-    $scope.user = { phone: '' };
+    $scope.user = { phone: '', fsphone: '' };
     $scope.formInstance = {};
     $scope.checkboxes = [{ name: 'Checkbox 1' },{ name: 'Checkbox 2' }];
-    $scope.required = true;
+    $scope.required1 = true;
 
    	$scope.validateEmail = false;
 
