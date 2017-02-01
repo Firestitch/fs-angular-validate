@@ -266,7 +266,7 @@
 
                                 if(attr(input,'required')!==undefined || attr(input,'required-condition')!==undefined) {
 
-                               		var required = true;
+                               		var required = attr(input,'required')!==undefined;
                                     if(attr(input,'required-condition')) {
 
                                     	var scope = input.data('required-scope') ? input.data('required-scope') : parentScope;
