@@ -264,13 +264,13 @@
                                     input.attr('name',name);
                                 }
 
-                                if(attr(input,'required')!==undefined) {
+                                if(attr(input,'required')!==undefined || attr(input,'required-condition')!==undefined) {
 
                                		var required = true;
-                                    if(attr(input,'required')) {
+                                    if(attr(input,'required-condition')) {
 
                                     	var scope = input.data('required-scope') ? input.data('required-scope') : parentScope;
-                                    	scope.$watch(attr(input,'required'),function(value,prev) {
+                                    	scope.$watch(attr(input,'required-condition'),function(value,prev) {
 
                                     		required = value;
                                     		controller.$validate();
