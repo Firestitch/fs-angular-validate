@@ -24,6 +24,7 @@
     $scope.select = 1;
 
     $scope.reset = function() {
+    	$scope.submitMessage = '';
         $scope.formInstance.reset();
     }
 
@@ -188,9 +189,17 @@
     };
 
 
-        $scope.submit = function() {
-        	$scope.submitted = true;
-            alert("Submitted");
+        $scope.submit = function(event) {
+
+        	$scope.submitMessage = 'Submitting...';
+
+            return $q(function(resolve) {
+
+            	$timeout(function() {
+            		resolve();
+            		$scope.submitMessage = 'Submitted';
+            	},2000);
+            });
         }
 
         $scope.syncCustom = function(value) {

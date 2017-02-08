@@ -1,9 +1,9 @@
 <md-button ng-click="hide = !hide" class="md-raised md-accent">Toogle Visible</md-button>
 <md-button ng-click="required1 = !required1" class="md-raised md-accent">Requiring {{required1 ? 'All' : 'No'}} Fields</md-button>
 
-<form fs-validate="submit()" fs-instance="formInstance">
+<form fs-validate="submit($event)" fs-instance="formInstance">
 
-
+<!--
     <div ng-hide="hide">
 
 
@@ -131,13 +131,13 @@
             </div>
         </md-checkbox-container>
 
-        <!-- <fs-lister ls-options="listerConf"></fs-lister> -->
+        <xxxfs-lister ls-options="listerConf"></xxxfs-lister>
     </div>
 
-
+ -->
     <div class="button-toolbar" layout="row" layout-align="end center">
-        <md-button type="submit" class="md-primary">Submit</md-button>
+        <md-button type="submit" class="md-primary" name="submit-button">Submit</md-button>
         <md-button type="button" ng-click="reset()" class="md-primary">Reset</md-button>
     </div>
-    <div ng-show="submitted">Submitted</div>
+    <div ng-show="submitMessage">{{submitMessage}}</div>
 </form>

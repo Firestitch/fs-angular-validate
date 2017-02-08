@@ -6,7 +6,7 @@
   "version": "0.0.0",
   "appPath": "app",
   "dependencies": {
-    "angular": "1.6.1",
+    "angular": "1.6.2",
     "angular-material": "1.1.1",
     "fs-angular-lister": "^1.0.0",
     "fs-angular-util": "^1.0.0",

@@ -117,6 +117,8 @@
                                 }
                             });
 
+                            var buttons = angular.element(element[0].querySelectorAll('button'));
+
                             $q.all(promises)
                             .then(function() {
 
@@ -124,8 +126,11 @@
 
 	                                if(form.$valid) {
 
+	                                	submits.attr('disabled','disabled');
+
 	                                	var result = null;
 	                                    if($scope.onsubmit) {
+
 	                                        result = $scope.$parent.$eval($scope.onsubmit);
 
 	                                        if(angular.isObject(result) && result.then) {
@@ -150,7 +155,6 @@
 
 	                            }).then(function() {
 
-	                            	var submits = angular.element(element[0].querySelectorAll('button[type="submit"]'));
 	                            	submits.removeAttr('disabled');
 
 	                            	$timeout(function() {
