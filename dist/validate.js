@@ -126,7 +126,7 @@
 
 	                                if(form.$valid) {
 
-	                                	submits.attr('disabled','disabled');
+	                                	buttons.attr('disabled','disabled');
 
 	                                	var result = null;
 	                                    if($scope.onsubmit) {
@@ -155,10 +155,10 @@
 
 	                            }).then(function() {
 
-	                            	submits.removeAttr('disabled');
+	                            	buttons.removeAttr('disabled');
 
 	                            	$timeout(function() {
-                                        submits.removeAttr('disabled');
+                                        buttons.removeAttr('disabled');
                                     },500);
 
 	                            	form.$submitting = false;
