@@ -193,10 +193,13 @@
 
         	$scope.submitMessage = 'Submitting...';
 
+			console.log("SUbmit");
+
             return $q(function(resolve) {
 
             	$timeout(function() {
             		resolve();
+
             		$scope.submitMessage = 'Submitted';
             	},2000);
             });

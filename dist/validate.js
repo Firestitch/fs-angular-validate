@@ -79,7 +79,7 @@
                         $scope.models = {};
                         $scope.instance = instance;
 
-                        angular.element(element[0].querySelectorAll('button[type="submit"]'))
+                        angular.element(element[0].querySelectorAll('button[type="submit"]:not(disabled)'))
                         .on('click',function() {
 
                         	var loader = angular.element('<div class="submit-loader"><div></div></div>');
@@ -92,6 +92,13 @@
 
                         var element = angular.element(element);
                         element.on('submit', function(event) {
+
+                        	if(form.$submitting) {
+                        		return false;
+                        	}
+
+                        	var buttons = angular.element(element[0].querySelectorAll('button'));
+                        	buttons.attr('disabled','disabled');
 
                             var promises = [];
                             form.$submitting = true;
@@ -128,16 +135,12 @@
                                 }
                             });
 
-                            var buttons = angular.element(element[0].querySelectorAll('button'))
-
                             $q.all(promises)
                             .then(function() {
 
                             	$q(function(resolve) {
 
 	                                if(form.$valid) {
-
-	                                	buttons.attr('disabled','disabled');
 
 	                                	var result = null;
 	                                    if($scope.onsubmit) {
@@ -164,16 +167,14 @@
 	                                    resolve();
 	                                }
 
-	                            }).then(function() {
-
-	                            	angular.element(element[0].querySelectorAll('button[type="submit"] .submit-loader')).remove();
-	                            	buttons.removeAttr('disabled');
+	                            }).finally(function() {
 
 	                            	$timeout(function() {
                                         buttons.removeAttr('disabled');
-                                    },500);
-
-	                            	form.$submitting = false;
+                                        form.$submitting = false;
+										angular.element(element[0].querySelectorAll('button[type="submit"] .submit-loader')).remove();
+	                            		buttons.removeAttr('disabled');
+                                    },500); //This is the default time for a double click to avoid multiple submits
 	                            });
                             });
 
