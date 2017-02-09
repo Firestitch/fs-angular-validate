@@ -71,7 +71,8 @@
                                         reset: reset,
                                       	validate: validate,
                                        	update: update,
-                                       	registerButton: registerButton };
+                                       	registerButton: registerButton },
+                                       	submitButton = null;
 
                         form.$submitting = false;
                         form.$submited = false;
@@ -94,12 +95,7 @@
 
 							if(button.attr('type')=='submit') {
 		                        button.on('click',function() {
-		                        	if(form.$valid) {
-			                        	var loader = angular.element('<div class="fs-validate-submit-loader"><div></div></div>');
-			                        	angular.element(this)
-			                        		.append(loader)
-			                        		.data('loader',loader);
-			                        }
+		                        	submitButton = angular.element(this);
 		                        });
 	                        }
 	                    }
@@ -111,7 +107,6 @@
                         		return false;
                         	}
 
-                        	angular.element(buttons).attr('disabled','disabled');
 
                             var promises = [];
                             form.$submitting = true;
@@ -147,6 +142,16 @@
                                     }
                                 }
                             });
+
+                        	if(form.$valid) {
+                        		angular.element(buttons).attr('disabled','disabled');
+                        		if(submitButton) {
+		                        	angular.element(submitButton)
+		                        	.append(angular.element('<div class="fs-validate-submit-loader"><div></div></div>'));
+		                        }
+                        	}
+
+                        	submitButton = null;
 
                             $q.all(promises)
                             .then(function() {
