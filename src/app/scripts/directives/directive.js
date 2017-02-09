@@ -69,7 +69,8 @@
                     	var instance = {form: form,
                                         reset: reset,
                                       	validate: validate,
-                                       	update: update };
+                                       	update: update,
+                                       	registerButton: registerButton };
 
                         form.$submitting = false;
                         form.$submited = false;
@@ -77,27 +78,38 @@
 						$scope.form = form;
                         $scope.models = {};
                         $scope.instance = instance;
+                        angular.element(element).data('instance',instance);
 
-                        angular.element(element[0].querySelectorAll('button[type="submit"]:not(disabled)'))
-                        .on('click',function() {
-
-                        	var loader = angular.element('<div class="submit-loader"><div></div></div>');
-
-                        	angular.element(this)
-                        		.append(loader)
-                        		.data('loader',loader);
-
+                        var buttons = angular.element([]);
+                        angular.forEach(element[0].querySelectorAll('button'),function(button) {
+                        	registerButton(button);
                         });
 
-                        var element = angular.element(element);
+                        function registerButton(button) {
+
+                        	buttons.push(button);
+                        	button = angular.element(button);
+
+
+							if(button.attr('type')=='submit') {
+		                        button.on('click',function() {
+		                        	var loader = angular.element('<div class="fs-validate-submit-loader"><div></div></div>');
+		                        	angular.element(this)
+		                        		.append(loader)
+		                        		.data('loader',loader);
+
+		                        });
+	                        }
+	                    }
+
+			            var element = angular.element(element);
                         element.on('submit', function(event) {
 
                         	if(form.$submitting) {
                         		return false;
                         	}
 
-                        	var buttons = angular.element(element[0].querySelectorAll('button'));
-                        	buttons.attr('disabled','disabled');
+                        	angular.element(buttons).attr('disabled','disabled');
 
                             var promises = [];
                             form.$submitting = true;
@@ -169,10 +181,11 @@
 	                            }).finally(function() {
 
 	                            	$timeout(function() {
-                                        buttons.removeAttr('disabled');
                                         form.$submitting = false;
-										angular.element(element[0].querySelectorAll('button[type="submit"] .submit-loader')).remove();
-	                            		buttons.removeAttr('disabled');
+	                            		angular.element(buttons).removeAttr('disabled');
+	                            		angular.forEach(buttons,function(button) {
+	                            			angular.element(button.querySelector('.fs-validate-submit-loader')).remove();
+	                            		});
                                     },500); //This is the default time for a double click to avoid multiple submits
 	                            });
                             });
@@ -621,5 +634,41 @@
                 }
             }
         };
+    })
+	.directive('fsValidateButtonContainer', function (fsValidate) {
+        return {
+            restrict: 'A',
+            scope: {
+                id: "@fsValidateButtonContainer"
+            },
+            link: {
+                post: function($scope,element) {
+
+                	setTimeout(function() {
+
+	                	var instance = angular.element(document.querySelector('#' + $scope.id)).data('instance');
+	                	if(instance) {
+	                		angular.forEach(element[0].querySelectorAll('button'),function(button) {
+
+	                			instance.registerButton(button);
+
+	                        	button = angular.element(button);
+
+	                        	if(button.attr('type')=='submit') {
+
+		                			button.on('click',function() {
+			                            fsValidate.submit($scope.id);
+			                        });
+			                    }
+	                		});
+	                	}
+                    });
+                }
+            }
+        };
     });
 })();
+
+
+
+

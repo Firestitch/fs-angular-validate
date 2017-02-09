@@ -10,7 +10,8 @@
 
         return {
         	phone: phone,
-        	email: email
+        	email: email,
+        	submit: submit
         };
 
 		/**
@@ -35,6 +36,24 @@
         function email(value) {
 			return !!fsUtil.string(value).match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
         }
+
+    	function submit(id) {
+            var el = angular.element(document.querySelector('#' + id));
+
+            if(el.length) {
+	            var button = angular.element('<button>')
+	                            .attr('type','submit')
+	                            .css('visibility','hidden')
+	                            .css('display','none');
+
+	            el.attr('action','javascript:;').append(button);
+
+	            setTimeout(function() {
+					button[0].click();
+	            	button.remove();
+	            });
+            }
+    	}
     });
 
 })();

@@ -1,7 +1,7 @@
 <md-button ng-click="hide = !hide" class="md-raised md-accent">Toogle Visible</md-button>
 <md-button ng-click="required1 = !required1" class="md-raised md-accent">Requiring {{required1 ? 'All' : 'No'}} Fields</md-button>
 
-<form fs-validate="submit($event)" fs-instance="formInstance">
+<form fs-validate="submit($event)" id="form" fs-instance="formInstance">
 
 <!--
     <div ng-hide="hide">
@@ -136,10 +136,16 @@
 
  -->
     <div class="button-toolbar" layout="row" layout-align="end center">
-        <md-button type="submit" class="md-primary" name="submit-button">Submit</md-button>
-        <md-button type="button" ng-click="reset()" class="md-primary">Reset</md-button>
+        <md-button type="submit" class="md-primary md-raised" name="submit-button">Submit</md-button>
+        <md-button type="button" ng-click="reset()" class="md-primary  md-raised">Reset</md-button>
     </div>
     <div ng-show="submitMessage">{{submitMessage}}</div>
 </form>
+
+<div fs-validate-button-container="form">
+    <md-button type="submit" class="md-primary md-raised" name="submit-button">Submit</md-button>
+    <md-button type="button" ng-click="reset()" class="md-primary  md-raised">Reset</md-button>
+</div>
+
 
 
