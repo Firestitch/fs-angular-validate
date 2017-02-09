@@ -94,11 +94,12 @@
 
 							if(button.attr('type')=='submit') {
 		                        button.on('click',function() {
-		                        	var loader = angular.element('<div class="fs-validate-submit-loader"><div></div></div>');
-		                        	angular.element(this)
-		                        		.append(loader)
-		                        		.data('loader',loader);
-
+		                        	if(form.$valid) {
+			                        	var loader = angular.element('<div class="fs-validate-submit-loader"><div></div></div>');
+			                        	angular.element(this)
+			                        		.append(loader)
+			                        		.data('loader',loader);
+			                        }
 		                        });
 	                        }
 	                    }
