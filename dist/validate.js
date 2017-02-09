@@ -79,6 +79,17 @@
                         $scope.models = {};
                         $scope.instance = instance;
 
+                        angular.element(element[0].querySelectorAll('button[type="submit"]'))
+                        .on('click',function() {
+
+                        	var loader = angular.element('<div class="submit-loader"><div></div></div>');
+
+                        	angular.element(this)
+                        		.append(loader)
+                        		.data('loader',loader);
+
+                        });
+
                         var element = angular.element(element);
                         element.on('submit', function(event) {
 
@@ -117,7 +128,7 @@
                                 }
                             });
 
-                            var buttons = angular.element(element[0].querySelectorAll('button'));
+                            var buttons = angular.element(element[0].querySelectorAll('button'))
 
                             $q.all(promises)
                             .then(function() {
@@ -155,6 +166,7 @@
 
 	                            }).then(function() {
 
+	                            	angular.element(element[0].querySelectorAll('button[type="submit"] .submit-loader')).remove();
 	                            	buttons.removeAttr('disabled');
 
 	                            	$timeout(function() {
