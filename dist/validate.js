@@ -263,7 +263,7 @@
 
 							angular.forEach(element[0].querySelectorAll('md-input-container,md-checkbox-container,md-datepicker-container'),function(container) {
 
-                                var messages = [];
+                                var messages = {};
                                 var containerName = container.nodeName.toLowerCase();
                                 var input;
 
@@ -326,7 +326,7 @@
                                                                                     return !required || !!fsUtil.string(value).length;
                                                                                 });
 
-                                    messages.push('<ng-message when="required">' + (attr(input,'required-message') || 'Required') + '</ng-message>');
+                                    messages.required = attr(input,'required-message') || 'Required';
                                 }
 
                                 if(attr(input,'minlength')!==undefined) {
@@ -339,7 +339,7 @@
                                                                                     return !fsUtil.string(value).length || String(value).length>=parseInt(length);
                                                                                 },attr(input,'minlength'));
 
-                                    messages.push('<ng-message when="minlength">' + message + '</ng-message>');
+                                    messages.minlength = message;
                                 }
 
                                 if(attr(input,'maxlength')!==undefined) {
@@ -353,7 +353,7 @@
                                                                             },attr(input,'maxlength'));
 
                                     input.attr('maxlength',null);
-                                    messages.push('<ng-message when="maxlength">' + message + '</ng-message>');
+                                    messages.maxlength = message;
                                 }
 
                                 if(attr(input,'equallength')!==undefined) {
@@ -366,7 +366,7 @@
                                                                                 return !fsUtil.string(value).length || String(value).length==parseInt(length);
                                                                             },attr(input,'equallength'));
 
-                                    messages.push('<ng-message when="equallength">' + message + '</ng-message>');
+                                    messages.equallength = message;
                                 }
 
                                 if(attr(input,'range')!==undefined) {
@@ -382,12 +382,12 @@
                                                                                 return !fsUtil.string(value).length || (value>=min && value<=max);
                                                                             },attr(input,'min'),attr(input,'max'));
 
-                                    messages.push('<ng-message when="range">' + message + '</ng-message>');
+                                    messages.range = message;
                                 }
 
                                 if(attr(input,'phone')!==undefined || attr(input,'type')=='tel') {
 
-                                    messages.push('<ng-message when="tel">' + (attr(input,'tel-message') || 'Must be a valid phone number') + '</ng-message>');
+                                    messages.tel = attr(input,'tel-message') || 'Must be a valid phone number';
 
                                     validators.tel = function(value) {
                                     	return !fsUtil.string(value).length || fsValidate.phone(value);
@@ -396,7 +396,7 @@
 
                                 if(attr(input,'email')!==undefined) {
 
-                                    messages.push('<ng-message when="email">' + (attr(input,'email-message') || 'Must be a valid email') + '</ng-message>');
+                                    messages.email = attr(input,'email-message') || 'Must be a valid email';
 
                                     validators.email = function(value) {
                                     	return !fsUtil.string(value).length || fsValidate.email(value);
@@ -413,7 +413,7 @@
                                                                                 return !fsUtil.string(value).length || value>=min;
                                                                             },attr(input,'min'));
 
-                                    messages.push('<ng-message when="min">' + message + '</ng-message>');
+                                    messages.min = message;
                                 }
 
                                 if(attr(input,'max')!==undefined) {
@@ -426,7 +426,7 @@
                                                                                 return !fsUtil.string(value).length || value<max;
                                                                             },attr(input,'max'));
 
-                                    messages.push('<ng-message when="max">' + message + '</ng-message>');
+                                    messages.max = message;
                                 }
 
                                 if(attr(input,'numeric')!==undefined) {
@@ -435,7 +435,7 @@
                                                                                 return !fsUtil.string(value).length || fsUtil.isNumeric(value);
                                                                             });
 
-                                    messages.push('<ng-message when="numeric">' + (attr(input,'numeric-message') || 'Must be a valid number') + '</ng-message>');
+                                    messages.numeric = attr(input,'numeric-message') || 'Must be a valid number';
                                 }
 
 
@@ -445,7 +445,7 @@
                                                                                 return !fsUtil.string(value).length || fsUtil.isInt(value);
                                                                             });
 
-                                    messages.push('<ng-message when="integer">' + (attr(input,'integer-message') || 'Must be a whole number') + '</ng-message>');
+                                    messages.integer = attr(input,'integer-message') || 'Must be a whole number';
                                 }
 
                                 if(attr(input,'currency')!==undefined) {
@@ -454,7 +454,7 @@
                                                                                 return !fsUtil.string(value).length || fsUtil.isNumeric(value);
                                                                             });
 
-                                    messages.push('<ng-message when="currency">' + (attr(input,'currency-message') || 'Must be a valid currency') + '</ng-message>');
+                                    messages.currency = attr(input,'currency-message') || 'Must be a valid currency';
                                 }
 
                                 if(attr(input,'compare')!==undefined) {
@@ -468,7 +468,7 @@
                                                                                 return compare===value;
                                                                             },attr(input,'compare'));
 
-                                    messages.push('<ng-message when="compare">' + (attr(input,'compare-message') || 'Mismatched value') + '</ng-message>');
+                                    messages.compare = attr(input,'compare-message') || 'Mismatched value';
                                 }
 
                                 angular.forEach(['custom','custom-submit'],function(type) {
@@ -477,7 +477,7 @@
                                         return;
                                     }
 
-                                    messages.push('<ng-message when="' + type + '">' + (attr(input,'custom-message') || '') + '</ng-message>');
+                                    messages[type] = attr(input,'custom-message') || '';
 
                                     if(type=='custom') {
                                         input.on('blur',function() {
@@ -543,7 +543,7 @@
                                             },function(message) {
                                                 if(message) {
                                                     $timeout(function() {
-                                                       angular.element(element[0].querySelector('ng-messages[name="' + attr(input,'name') + '"] ng-message[when="' + type + '"]'))
+                                                       angular.element(element[0].querySelector('.messages[data-name="' + attr(input,'name') + '"] .message[data-type="' + type + '"]'))
                                                         .text(message);
                                                     });
                                                 }
@@ -596,22 +596,29 @@
                                 }
 
                                 if(angular.element(container).attr('required')!==undefined) {
-                                    messages.push('<ng-message when="required">' + (angular.element(container).attr('required-message') || 'Required') + '</ng-message>');
+                                    messages.required = angular.element(container).attr('required-message') || 'Required';
                                 }
 
                                 //Prevalidate the form. Avoid required $error.required = true
                                 controller.$validate();
 
-                                if(messages.length)  {
+                                if(!fsUtil.isEmpty(messages))  {
 
-                                    var ngmessages = angular.element('<ng-messages ' +
-                                                                        'name="' + name + '" ' +
-                                                                        'md-auto-hide="false" ' +
-                                                                        'ng-class="{ submitted: form.$submitted, touched: form[\'' + attr(input,'name') + '\'].$touched }" ' +
-                                                                        'for="form[\'' + attr(input,'name') + '\'].$error">' + messages.join('') + '</ng-messages>');
+                                    var msgs = angular.element('<div>')
+                                    					.addClass('messages')
+														.attr('data-name',name)
+														.attr('ng-show',"(form.$submitted || form['" + attr(input,'name') + "'].$touched) && form['" + attr(input,'name') + "'].$invalid");
 
-                                    angular.element(container).append(ngmessages);
-                                    $compile(ngmessages)($scope);
+                                    angular.forEach(messages,function(message,type) {
+                                    	msgs.append(angular.element('<div>')
+                                    					.addClass('message')
+                                    					.attr('data-type',type)
+                                    					.attr('ng-show',"form['" + attr(input,'name') + "'].$error['" + type + "']")
+                                    					.append(message));
+                                    });
+
+                                    angular.element(container).append(msgs);
+                                    $compile(msgs)($scope);
                                 }
                             });
                         }

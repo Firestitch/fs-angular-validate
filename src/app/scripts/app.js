@@ -9,7 +9,8 @@ angular
     'fs-angular-lister',
     'fs-angular-api',
     'fs-angular-phone',
-    'fs-angular-time'
+    'fs-angular-time',
+    'fs-angular-datetime'
 ])
 .config(function ($stateProvider, $urlRouterProvider) {
 

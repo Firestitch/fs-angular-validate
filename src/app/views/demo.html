@@ -6,11 +6,14 @@
 
     <div ng-hide="hide">
 
-
-       <md-input-container class="md-block">
+        <md-input-container class="md-block">
             <label>Always Required</label>
             <input type="text" ng-model="user.required" required>
         </md-input-container>
+
+        <fs-datetime fs-model="model1" fs-label="Date" fs-time="false" fs-disabled="true"></fs-datetime>
+        <fs-datetime fs-model="model2" fs-label="Date" fs-time="false" fs-disabled-days="disabledDays" fs-required="true"></fs-datetime>
+
 <!--
         <md-input-container class="md-block">
             <label>Dynamic Required</label>
@@ -98,17 +101,17 @@
             <label>Asynchronous Custom</label>
             <input type="text" ng-model="user.asynccustom" custom="asyncCustom"/>
         </md-input-container>
-
+ -->
         <md-input-container class="md-block">
             <label>Asynchronous Custom Submit</label>
             <input type="text" ng-model="user.asynccustomsubmit" custom-submit="asyncCustomSubmit"/>
         </md-input-container>
 
-        <md-input-container class="md-block">
+<!--         <md-input-container class="md-block">
             <label>Required Textarea</label>
             <textarea ng-model="user.requiredtextarea" required-condition="required1"></textarea>
         </md-input-container>
-
+ -->
         <div layout="row">
             <md-input-container flex>
                 <label>Password</label>
@@ -131,7 +134,7 @@
             </div>
         </md-checkbox-container>
 
-        <xxxfs-lister ls-options="listerConf"></xxxfs-lister> -->
+        <xxxfs-lister ls-options="listerConf"></xxxfs-lister>
     </div>
 
 

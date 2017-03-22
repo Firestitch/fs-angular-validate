@@ -1,28 +1,27 @@
+form[fs-validate] .messages {
+    clear: left;
+}
+
+form[fs-validate] .message {
+    font-size: 12px;
+   	padding-top: 3px;
+    color: #DD2C00;
+    clear: left;
+}
 
 form[fs-validate] md-datepicker-container .md-datepicker-input-container.md-datepicker-invalid input {
     border-color: rgb(221,44,0);
 }
 
-form[fs-validate] ng-messages {
-	display: none;
-}
-
-form[fs-validate] ng-messages.touched,
-form[fs-validate] ng-messages.submitted {
-	display: block;
-}
-
-
-form[fs-validate] md-datepicker-container ng-messages {
+form[fs-validate] md-datepicker-container .messages {
 	position: absolute;
     -webkit-order: 4;
     -ms-flex-order: 4;
     order: 4;
     overflow: hidden;
-    clear: left;
 }
 
-form[fs-validate] md-datepicker-container ng-message {
+form[fs-validate] md-datepicker-container .message {
     font-size: 12px;
     line-height: 14px;
     overflow: hidden;
@@ -32,17 +31,6 @@ form[fs-validate] md-datepicker-container ng-message {
     padding-top: 5px;
     color: rgb(221,44,0);
     display: block;
-}
-
-form[fs-validate] ng-message {
-    font-size: 12px;
-    line-height: 14px;
-    overflow: hidden;
-    opacity: 1 !important;
-    margin-top: 0 !important;
-    padding-top: 5px;
-    color: #DD2C00;
-    transition: 0s !important;
 }
 
 .fs-validate-submit-loader {
