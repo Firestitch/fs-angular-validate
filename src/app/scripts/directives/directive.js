@@ -604,13 +604,13 @@
                                 if(!fsUtil.isEmpty(messages))  {
 
                                     var msgs = angular.element('<div>')
-                                    					.addClass('messages')
+                                    					.addClass('ng-hide messages')
 														.attr('data-name',name)
 														.attr('ng-show',"(form.$submitted || form['" + attr(input,'name') + "'].$touched) && form['" + attr(input,'name') + "'].$invalid");
 
                                     angular.forEach(messages,function(message,type) {
                                     	msgs.append(angular.element('<div>')
-                                    					.addClass('message')
+                                    					.addClass('ng-hide message')
                                     					.attr('data-type',type)
                                     					.attr('ng-show',"form['" + attr(input,'name') + "'].$error['" + type + "']")
                                     					.append(message));
