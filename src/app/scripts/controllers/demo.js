@@ -28,6 +28,11 @@
         $scope.formInstance.reset();
     }
 
+    $scope.changeDuration = function() {
+    	var x = $scope.form.$valid;
+    	debugger;
+    }
+
     $scope.listerConf = {
 
         debug: false,

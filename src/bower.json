@@ -6,7 +6,7 @@
   "version": "0.0.0",
   "appPath": "app",
   "dependencies": {
-    "angular": "1.6.2",
+    "angular": "1.6.3",
     "angular-material": "1.1.1",
     "fs-angular-lister": "^1.0.0",
     "fs-angular-util": "^1.0.0",
@@ -15,7 +15,11 @@
     "fs-angular-phone": "^1.0.0",
     "fs-angular-time": "^1.0.0",
     "fs-angular-datetime": "^1.0.0",
+    "fs-angular-duration": "^1.0.0",
     "angular-ui-router": "0.3.2",
     "fs-boilerplate-styles": "^1.0.0"
+  },
+  "resolutions": {
+    "angular": "1.6.3"
   }
 }

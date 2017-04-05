@@ -485,7 +485,7 @@
                                         });
                                     }
 
-                                    var custom = angular.bind(this,
+                                    $scope.form[name].$asyncValidators[type] = angular.bind(this,
                                         function(input, element, form, type, value, oldValue) {
 
                                             if(attr(input,'type')=='num') {
@@ -498,7 +498,7 @@
                                                 }
                                             }
 
-                                            var promise = $q(function(resolve,reject) {
+                                            return $q(function(resolve,reject) {
 
                                                  // Only process a custom-submit validator when called from on('submit')
                                                 if(type=='custom-submit' && !form.$submitting) {
@@ -535,12 +535,11 @@
 	                                            } catch(e) {
 	                                            	reject(e);
 	                                            }
-                                            });
-
-                                            promise
+                                            })
                                             .then(function(message) {
-                                                return message;
-                                            },function(message) {
+                                                return $q.resolve(message);
+                                            })
+                                            .catch(function(message) {
                                                 if(message) {
                                                     $timeout(function() {
                                                        angular.element(element[0].querySelector('.messages[data-name="' + attr(input,'name') + '"] .message[data-type="' + type + '"]'))
@@ -549,11 +548,7 @@
                                                 }
                                                 return $q.reject(message);
                                             });
-
-                                            return promise;
                                     },input, element, $scope.form, type);
-
-                                    $scope.form[name].$asyncValidators[type] = custom;
                                 });
 
                                 if(angular.element(container).attr('required')!==undefined) {

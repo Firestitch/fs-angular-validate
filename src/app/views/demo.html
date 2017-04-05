@@ -1,11 +1,11 @@
 <md-button ng-click="hide = !hide" class="md-raised md-accent">Toogle Visible</md-button>
 <md-button ng-click="required1 = !required1" class="md-raised md-accent">Requiring {{required1 ? 'All' : 'No'}} Fields</md-button>
 
-<form fs-validate="submit($event)" id="form" fs-instance="formInstance">
+<form fs-validate="submit($event)" id="form" fs-instance="formInstance" name="form">
 
 
     <div ng-hide="hide">
-
+<!--
         <md-input-container class="md-block">
             <label>Always Required</label>
             <input type="text" ng-model="user.required" required>
@@ -14,7 +14,9 @@
         <fs-datetime fs-model="model1" fs-label="Date" fs-time="false" fs-disabled="true"></fs-datetime>
         <fs-datetime fs-model="model2" fs-label="Date" fs-time="false" fs-disabled-days="disabledDays" fs-required="true"></fs-datetime>
 
-<!--
+        <fs-datetime-range fs-from="from" fs-to="to" fs-to-label="End Date" fs-from-label="Start Date" fs-time="true" fs-required="true"></fs-datetime-range>
+
+
         <md-input-container class="md-block">
             <label>Dynamic Required</label>
             <input type="text" ng-model="user.required" required-condition="required1">
@@ -93,25 +95,18 @@
             <input type="text" ng-model="user.equallength" equallength="5"/>
         </md-input-container>
 
-        <md-input-container class="md-block">
-            <label>Synchronous Custom</label>
-            <input type="text" ng-model="user.synccustom" custom="syncCustom" custom-message="The valid value is 'hello'"/>
-        </md-input-container>
-         <md-input-container class="md-block">
-            <label>Asynchronous Custom</label>
-            <input type="text" ng-model="user.asynccustom" custom="asyncCustom"/>
-        </md-input-container>
- -->
+
         <md-input-container class="md-block">
             <label>Asynchronous Custom Submit</label>
             <input type="text" ng-model="user.asynccustomsubmit" custom-submit="asyncCustomSubmit"/>
         </md-input-container>
 
-<!--         <md-input-container class="md-block">
+        <md-input-container class="md-block">
             <label>Required Textarea</label>
             <textarea ng-model="user.requiredtextarea" required-condition="required1"></textarea>
         </md-input-container>
- -->
+
+
         <div layout="row">
             <md-input-container flex>
                 <label>Password</label>
@@ -124,7 +119,6 @@
             </md-input-container>
         </div>
 
-
         <md-checkbox-container required>
             <label>Checkboxes</label>
             <div layout="row">
@@ -133,6 +127,18 @@
                 </md-checkbox>
             </div>
         </md-checkbox-container>
+
+        <md-input-container class="md-block">
+            <label>Synchronous Custom</label>
+            <input type="text" ng-model="user.synccustom" custom="syncCustom" custom-message="The valid value is 'hello'"/>
+        </md-input-container>
+         <md-input-container class="md-block">
+            <label>Asynchronous Custom</label>
+            <input type="text" ng-model="user.asynccustom" custom="asyncCustom"/>
+        </md-input-container> -->
+
+
+        <fs-duration fs-label="Duration" fs-model="duration" fs-change="changeDuration($event)"></fs-duration>
 
         <xxxfs-lister ls-options="listerConf"></xxxfs-lister>
     </div>
