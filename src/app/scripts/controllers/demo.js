@@ -11,15 +11,6 @@
 
    	$scope.validateEmail = false;
 
-    $scope.asyncCustomSubmit = function() {
-        return $q(function(resolve,reject) {
-	        if($scope.user.asynccustomsubmit=='123123')
-	            resolve();
-	        else
-	            reject("The the value for Asynchronous Custom Submit is not equal to 123123");
-
-        });
-    }
 
     $scope.select = 1;
 
@@ -30,6 +21,11 @@
 
     $scope.changeDuration = function() {
     	var x = $scope.form.$valid;
+    	debugger;
+    }
+
+    $scope.change = function() {
+    	var valid = $scope.form.$valid;
     	debugger;
     }
 
@@ -194,42 +190,44 @@
     };
 
 
-        $scope.submit = function(event) {
+    $scope.submit = function(event) {
 
-        	$scope.submitMessage = 'Submitting...';
+    	$scope.submitMessage = 'Submitting...';
 
-			console.log("SUbmit");
+		console.log("Submit");
 
-            return $q(function(resolve) {
+        return $q(function(resolve) {
 
-            	$timeout(function() {
-            		resolve();
+        	$timeout(function() {
+        		resolve();
 
-            		$scope.submitMessage = 'Submitted';
-            	},2000);
-            });
+        		$scope.submitMessage = 'Submitted';
+        	},2000);
+        });
+    }
+
+    $scope.validator = function(value,user) {
+
+        if(value==="" || String(value)=="hello") {
+            return true;
+        } else {
+            return "The valid value is 'hello'";
         }
+    }
 
-        $scope.syncCustom = function(value) {
+    $scope.asyncValidator = function(value) {
 
+       	return $q(function(resolve,reject) {
             if(value==="" || String(value)=="hello") {
-                return true;
+                resolve();
             } else {
-                return false;
+                reject('Async Custom message. The valid value is \'hello\'');
             }
-        }
+       });
+    }
 
-        $scope.asyncCustom = function(value) {
+    $scope.syncCustom = $scope.validator;
+    $scope.asyncCustomSubmit = $scope.asyncValidator;
 
-            var deferred = $q.defer();
-
-            if(value==="" || String(value)=="hello") {
-                deferred.resolve();
-            } else {
-                deferred.reject('Async Custom message. The valid value is \'hello\'');
-            }
-
-            return deferred.promise;
-        }
 });
 

@@ -5,11 +5,14 @@
 
 
     <div ng-hide="hide">
-<!--
-        <md-input-container class="md-block">
+
+       <!--     <md-input-container class="md-block">
             <label>Always Required</label>
             <input type="text" ng-model="user.required" required>
-        </md-input-container>
+        </md-input-container> -->
+
+<!--
+
 
         <fs-datetime fs-model="model1" fs-label="Date" fs-time="false" fs-disabled="true"></fs-datetime>
         <fs-datetime fs-model="model2" fs-label="Date" fs-time="false" fs-disabled-days="disabledDays" fs-required="true"></fs-datetime>
@@ -97,11 +100,6 @@
 
 
         <md-input-container class="md-block">
-            <label>Asynchronous Custom Submit</label>
-            <input type="text" ng-model="user.asynccustomsubmit" custom-submit="asyncCustomSubmit"/>
-        </md-input-container>
-
-        <md-input-container class="md-block">
             <label>Required Textarea</label>
             <textarea ng-model="user.requiredtextarea" required-condition="required1"></textarea>
         </md-input-container>
@@ -128,14 +126,42 @@
             </div>
         </md-checkbox-container>
 
+
+         -->
+
         <md-input-container class="md-block">
-            <label>Synchronous Custom</label>
-            <input type="text" ng-model="user.synccustom" custom="syncCustom" custom-message="The valid value is 'hello'"/>
+            <label>Synchronous Validator</label>
+            <input type="text" ng-model="user.validator" validator="validator($value,user)"/>
         </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Synchronous Submit Validator</label>
+            <input type="text" ng-model="user.submitvalidator" submit-validator="validator($value,user)"/>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Asynchronous Validator</label>
+            <input type="text" ng-model="user.asyncvalidator" async-validator="asyncValidator($value)"/>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Asynchronous Submit Validator</label>
+            <input type="text" ng-model="user.asyncsubmitvalidator" async-submit-validator="asyncValidator"/>
+        </md-input-container>
+
+
+
          <md-input-container class="md-block">
-            <label>Asynchronous Custom</label>
-            <input type="text" ng-model="user.asynccustom" custom="asyncCustom"/>
-        </md-input-container> -->
+            <label>Synchronous Custom (Legacy)</label>
+            <input type="text" ng-model="user.synccustom" custom="syncCustom"/>
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Asynchronous Custom Submit (Legacy)</label>
+            <input type="text" ng-model="user.asynccustomsubmit" custom-submit="asyncCustomSubmit"/>
+        </md-input-container>
+
+
 
 
         <fs-duration fs-label="Duration" fs-model="duration" fs-change="changeDuration($event)"></fs-duration>

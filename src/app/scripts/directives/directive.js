@@ -470,52 +470,57 @@
                                     messages.compare = attr(input,'compare-message') || 'Mismatched value';
                                 }
 
-                                angular.forEach(['custom','custom-submit'],function(type) {
+                                angular.forEach(['custom','custom-submit','validator','async-validator','submit-validator','async-submit-validator'],function(validatorType) {
 
-                                    if(attr(input,type)===undefined) {
+                                    if(attr(input,validatorType)===undefined) {
                                         return;
                                     }
 
-                                    messages[type] = attr(input,'custom-message') || '';
+                                    var scope = parentScope;
+                                    var validatorFunction = validatorFunction = attr(input,validatorType);
+                                    messages[validatorType] = attr(input,'validator-message') || '';
 
-                                    if(type=='custom') {
+                                    //Legacy custom namespace
+                                    if(validatorType=='custom' || validatorType=='custom-submit') {
+
+	                                    if(validatorType=='custom') {
+	                                    	validatorType = 'validator';
+	                                    }
+
+	                                    if(validatorType=='custom-submit') {
+	                                    	validatorType = 'async-submit-validator';
+	                                    }
+
+                                    	if(input.data('custom-scope')) {
+                                    		scope =  input.data('custom-scope');
+                                    	}
+
+                                    	messages[validatorType] = attr(input,'custom-message') || '';
+                                    }
+
+                                    if(validatorType=='validator' || validatorType=='async-validator') {
                                         input.on('blur',function() {
                                             controller.$validate();
                                         });
                                     }
 
-                                    $scope.form[name].$asyncValidators[type] = angular.bind(this,
-                                        function(input, element, form, type, value, oldValue) {
+                                    if(validatorType=='async-validator' || validatorType=='async-submit-validator') {
 
-                                            if(attr(input,'type')=='num') {
-                                                if(value===undefined) {
-                                                    value = null;
-                                                }
-                                            } else {
-                                                if(value===undefined || value===null) {
-                                                    value = '';
-                                                }
-                                            }
+	                                    controller.$asyncValidators[validatorType] = angular.bind(this,
+	                                        function(input, element, form, validatorType, value, oldValue) {
 
-                                            return $q(function(resolve,reject) {
+	                                        	value = sanitizeValue(value,input);
 
-                                                 // Only process a custom-submit validator when called from on('submit')
-                                                if(type=='custom-submit' && !form.$submitting) {
-                                                    return resolve();
-                                                }
+	                                            return $q(function(resolve,reject) {
 
-                                                var scope = input.data('custom-scope') ? input.data('custom-scope') : parentScope;
-                                                var result = scope.$eval(attr(input,type));
-
-                                                try {
-
-	                                                if(angular.isFunction(result)) {
-	                                                    result = result(value);
+	                                                // Only process a submit validator when called from on('submit')
+	                                                if(validatorType=='async-submit-validator' && !form.$submitting) {
+	                                                    return resolve();
 	                                                }
 
-	                                                if(angular.isObject(result) && result.catch) {
+	                                                try {
 
-	                                                    result
+		                                                evalValidator(validatorFunction,value)
 	                                                    .then(function() {
 	                                                        resolve();
 	                                                    })
@@ -523,31 +528,86 @@
 	                                                        reject(message);
 	                                                    });
 
-	                                                } else {
-	                                                   if(result===true) {
-	                                                        resolve();
-	                                                   } else {
-	                                                        reject(result);
-	                                                   }
+	                                                } catch(e) {
+	                                                	reject(e);
 	                                                }
 
-	                                            } catch(e) {
-	                                            	reject(e);
-	                                            }
-                                            })
-                                            .then(function(message) {
-                                                return $q.resolve(message);
-                                            })
-                                            .catch(function(message) {
-                                                if(message) {
-                                                    $timeout(function() {
-                                                       angular.element(element[0].querySelector('.messages[data-name="' + attr(input,'name') + '"] .message[data-type="' + type + '"]'))
-                                                        .text(message);
-                                                    });
+	                                            })
+	                                            .catch(function(message) {
+	                                            	updateMessage(message,attr(input,'name'),validatorType);
+	                                            	return $q.reject(message);
+	                                            });
+
+	                                    },input, element, $scope.form, validatorType);
+
+	                                } else if(validatorType=='validator' || validatorType=='submit-validator') {
+
+	                                    controller.$validators[validatorType] = angular.bind(this,
+	                                        function(input, element, form, validatorType, value, oldValue) {
+
+	                                            value = sanitizeValue(value,input);
+
+                                                // Only process a custom-submit validator when called from on('submit')
+                                                if(validatorType=='submit-validator' && !form.$submitting) {
+                                                    return true;
                                                 }
-                                                return $q.reject(message);
+
+                                                var result = evalValidator(validatorFunction,value);
+
+                                                try {
+
+	                                                if(angular.isFunction(result)) {
+	                                                    result = result(value);
+	                                                }
+
+	                                                if(result===true) {
+	                                                	return true;
+	                                                }
+
+	                                                throw result;
+
+	                                            } catch(e) {
+	                                            	updateMessage(e,attr(input,'name'),validatorType);
+	                                            	return false;
+	                                            }
+
+	                                    },input, element, $scope.form, validatorType);
+	                                }
+
+	                                function evalValidator(func, value) {
+
+	                                	var parts = func.match(/\(\)$/);
+	                                	if(parts) {
+	                                		func = func.replace('()','($value)');
+	                                	} else if(func.match(/[^\)]+$/)) {
+	                                		func += '($value)';
+	                                	}
+
+                                       	return scope.$eval(func,{ $value: value });
+	                                }
+
+                                    function updateMessage(message,name,validatorType) {
+                                        if(message) {
+                                            $timeout(function() {
+                                               angular.element(element[0].querySelector('.messages[data-name="' + name + '"] .message[data-type="' + validatorType + '"]'))
+                                                .text(message);
                                             });
-                                    },input, element, $scope.form, type);
+                                        }
+                                    }
+
+                                    function sanitizeValue(value,input) {
+                                    	if(attr(input,'type')=='num') {
+                                            if(value===undefined) {
+                                                value = null;
+                                            }
+                                        } else {
+                                            if(value===undefined || value===null) {
+                                                value = '';
+                                            }
+                                        }
+
+                                        return value;
+                                    }
                                 });
 
                                 if(angular.element(container).attr('required')!==undefined) {
