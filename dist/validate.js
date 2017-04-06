@@ -477,7 +477,7 @@
                                         return;
                                     }
 
-                                    var scope = parentScope;
+                                    var scope = input.data('validator-scope') ? input.data('validator-scope') : parentScope;
                                     var validatorFunction = validatorFunction = attr(input,validatorType);
                                     messages[validatorType] = attr(input,'validator-message') || '';
 
@@ -575,7 +575,7 @@
 	                                    },input, element, $scope.form, validatorType);
 	                                }
 
-	                                function evalValidator(func, value) {
+	                                function evalValidator(func,value) {
 
 	                                	var parts = func.match(/\(\)$/);
 	                                	if(parts) {
