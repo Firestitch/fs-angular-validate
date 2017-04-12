@@ -553,9 +553,9 @@
                                                     return true;
                                                 }
 
-                                                var result = evalValidator(validatorFunction,value);
-
                                                 try {
+
+                                                	var result = evalValidator(validatorFunction,value);
 
 	                                                if(angular.isFunction(result)) {
 	                                                    result = result(value);

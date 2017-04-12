@@ -149,36 +149,33 @@
             <input type="text" ng-model="user.asyncsubmitvalidator" async-submit-validator="asyncValidator"/>
         </md-input-container>
 
-
-
-         <md-input-container class="md-block">
-            <label>Synchronous Custom (Legacy)</label>
-            <input type="text" ng-model="user.synccustom" custom="syncCustom"/>
-        </md-input-container>
-
-        <md-input-container class="md-block">
-            <label>Asynchronous Custom Submit (Legacy)</label>
-            <input type="text" ng-model="user.asynccustomsubmit" custom-submit="asyncCustomSubmit"/>
-        </md-input-container>
+        <fs-duration fs-label="Duration" fs-model="duration" fs-change="changeDuration($event)"></fs-duration>
  -->
 
 
+        <md-input-container class="md-block">
+            <label>Synchronous Custom (Legacy)</label>
+            <input type="text" ng-model="user.synccustom" custom="syncCustom" custom-message="asdasdasdasdasdaasd"/>
+        </md-input-container>
 
-        <fs-duration fs-label="Duration" fs-model="duration" fs-change="changeDuration($event)"></fs-duration>
+
+         <md-input-container class="md-block">
+            <label>Asynchronous Custom Submit (Legacy)</label>
+            <input type="text" ng-model="user.asynccustomsubmit" custom-submit="asyncCustomSubmit"/>
+        </md-input-container>
 
         <xxxfs-lister ls-options="listerConf"></xxxfs-lister>
     </div>
 
 
     <div class="button-toolbar" layout="row" layout-align="end center">
-        <md-button type="submit" class="md-primary md-raised" name="submit-button">Submit</md-button>
+        <md-button type="submit" class="md-primary md-raised" name="submit-button">{{submitButton}}</md-button>
         <md-button type="button" ng-click="reset()" class="md-primary  md-raised">Reset</md-button>
     </div>
-    <div ng-show="submitMessage">{{submitMessage}}</div>
 </form>
 
 <div fs-validate-button-container="form">
-    <md-button type="submit" class="md-primary md-raised" name="submit-button">Submit</md-button>
+    <md-button type="submit" class="md-primary md-raised" name="submit-button">{{submitButton}}</md-button>
     <md-button type="button" ng-click="reset()" class="md-primary  md-raised">Reset</md-button>
 </div>
 

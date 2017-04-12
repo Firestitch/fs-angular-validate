@@ -8,14 +8,12 @@
     $scope.formInstance = {};
     $scope.checkboxes = [{ name: 'Checkbox 1' },{ name: 'Checkbox 2' }];
     $scope.required1 = true;
-
    	$scope.validateEmail = false;
-
-
+    $scope.submitButton = 'Submit';
     $scope.select = 1;
 
     $scope.reset = function() {
-    	$scope.submitMessage = '';
+    	$scope.submitButton = 'Submit';
         $scope.formInstance.reset();
     }
 
@@ -192,7 +190,7 @@
 
     $scope.submit = function(event) {
 
-    	$scope.submitMessage = 'Submitting...';
+    	$scope.submitButton = 'Submitting...';
 
 		console.log("Submit");
 
@@ -201,7 +199,7 @@
         	$timeout(function() {
         		resolve();
 
-        		$scope.submitMessage = 'Submitted';
+        		$scope.submitButton = 'Submit';
         	},2000);
         });
     }
@@ -211,7 +209,8 @@
         if(value==="" || String(value)=="hello") {
             return true;
         } else {
-            return "The valid value is 'hello'";
+        	throw 'The valid value is "hello"';
+            //return 'The valid value is "hello"';
         }
     }
 
@@ -221,7 +220,7 @@
             if(value==="" || String(value)=="hello") {
                 resolve();
             } else {
-                reject('Async Custom message. The valid value is \'hello\'');
+                reject('Async Custom message. The valid value is "hello"');
             }
        });
     }
