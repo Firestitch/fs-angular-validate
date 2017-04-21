@@ -1,10 +1,25 @@
 <md-button ng-click="hide = !hide" class="md-raised md-accent">Toogle Visible</md-button>
-<md-button ng-click="required1 = !required1" class="md-raised md-accent">Requiring {{required1 ? 'All' : 'No'}} Fields</md-button>
+<md-button ng-click="requiredCondition = !requiredCondition" class="md-raised md-accent">Requiring {{requiredCondition ? 'All' : 'No'}} Fields</md-button>
+<md-button ng-click="something = !something" class="md-raised md-accent">Toogle Something</md-button>
 
 <form fs-validate="submit($event)" id="form" fs-instance="formInstance" name="form">
 
 
     <div ng-hide="hide">
+
+        <md-input-container class="md-block">
+            <label>Dynamic Required</label>
+            <input type="text" ng-model="user.required" required-condition="requiredCondition">
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Dropdown</label>
+            <md-select ng-model="select" required-condition="requiredCondition==true && something">
+              <md-option ng-repeat="value in [{},{ id: 1, name: 'One' },{ id: 2, name: 'Two' }]" value="{{value.id}}">
+                {{value.name}}
+              </md-option>
+            </md-select>
+        </md-input-container>
 
        <!--     <md-input-container class="md-block">
             <label>Always Required</label>
@@ -20,14 +35,9 @@
         <fs-datetime-range fs-from="from" fs-to="to" fs-to-label="End Date" fs-from-label="Start Date" fs-time="true" fs-required="true"></fs-datetime-range>
 
 
-        <md-input-container class="md-block">
-            <label>Dynamic Required</label>
-            <input type="text" ng-model="user.required" required-condition="required1">
-        </md-input-container>
 
-
-        <fs-phone fs-model="user.fsphone" fs-label="Phone" fs-required="required1"></fs-phone>
-        <fs-time fs-model="user.fstime" fs-label="Time" fs-required="required1" sfs-hint="Time Hint"></fs-time>
+        <fs-phone fs-model="user.fsphone" fs-label="Phone" fs-required="requiredCondition"></fs-phone>
+        <fs-time fs-model="user.fstime" fs-label="Time" fs-required="requiredCondition" sfs-hint="Time Hint"></fs-time>
 
         <md-input-container class="md-block">
             <label>Numeric</label>
@@ -46,7 +56,7 @@
 
         <md-input-container class="md-block">
             <label>Dropdown</label>
-            <md-select ng-model="select" required-condition="required1">
+            <md-select ng-model="select" required-condition="requiredCondition">
               <md-option ng-repeat="value in [{ id: 1, name: 'One' },{ id: 2, name: 'Two' }]" value="{{value.id}}">
                 {{value.name}}
               </md-option>
@@ -85,7 +95,7 @@
 
         <md-input-container class="md-block">
             <label>Min Length</label>
-            <input type="text" minlength="10" ng-model="user.minlength" required-condition="required1" />
+            <input type="text" minlength="10" ng-model="user.minlength" required-condition="requiredCondition" />
         </md-input-container>
 
         <md-input-container class="md-block">
@@ -101,7 +111,7 @@
 
         <md-input-container class="md-block">
             <label>Required Textarea</label>
-            <textarea ng-model="user.requiredtextarea" required-condition="required1"></textarea>
+            <textarea ng-model="user.requiredtextarea" required-condition="requiredCondition"></textarea>
         </md-input-container>
 
 

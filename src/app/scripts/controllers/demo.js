@@ -7,7 +7,7 @@
     $scope.user = { phone: '', fsphone: '' };
     $scope.formInstance = {};
     $scope.checkboxes = [{ name: 'Checkbox 1' },{ name: 'Checkbox 2' }];
-    $scope.required1 = true;
+    $scope.requiredCondition = true;
    	$scope.validateEmail = false;
     $scope.submitButton = 'Submit';
     $scope.select = 1;

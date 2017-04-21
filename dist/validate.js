@@ -307,19 +307,36 @@
                                     if(attr(input,'required-condition')) {
 
                                     	var scope = input.data('required-scope') ? input.data('required-scope') : parentScope;
-                                    	scope.$watch(attr(input,'required-condition'),function(value,prev) {
+
+                                    	var watchRequired = function(value) {
 
                                     		required = value;
                                     		controller.$validate();
 
                                     		if(required) {
-                                    			angular.element(container.querySelector('label')).addClass('md-required');
-                                    			angular.element(container.querySelector('md-select')).removeClass('md-no-asterisk');
+                                    			angular.element(container.querySelector('label'))
+                                    				.addClass('md-required');
+                                    			angular.element(container.querySelector('md-select'))
+                                    				.attr('required','required');
                                     		} else {
-                                    			angular.element(container.querySelector('label')).removeClass('md-required');
-                                    			angular.element(container.querySelector('md-select')).addClass('md-no-asterisk');
+                                    			angular.element(container.querySelector('label'))
+                                    				.removeClass('md-required');
+                                    			angular.element(container.querySelector('md-select'))
+                                    				.removeAttr('required');
                                     		}
-                                    	});
+                                    	}
+
+                                    	var condition = attr(input,'required-condition');
+
+                                    	//Observe the whole condition if the expression is a formula and not
+                                    	//simply watching a scope variable
+                                    	if(condition.match(/[!><=]+/)) {
+	                                    	scope.$watch(function() {
+	                                    		watchRequired(scope.$eval(condition));
+	                                    	});
+	                                    } else {
+	                                    	scope.$watch(condition,watchRequired);
+	                                    }
                                     }
 
                                     validators.required = angular.bind(this, function(value) {
