@@ -2,7 +2,7 @@
 <md-button ng-click="requiredCondition = !requiredCondition" class="md-raised md-accent">Requiring {{requiredCondition ? 'All' : 'No'}} Fields</md-button>
 <md-button ng-click="something = !something" class="md-raised md-accent">Toogle Something</md-button>
 
-<form fs-validate="submit($event)" id="form" fs-instance="formInstance" name="form">
+<form fs-validate="submit($event)" id="form" fs-instance="formInstance" name="form" fs-message="false">
 
 
     <div ng-hide="hide">

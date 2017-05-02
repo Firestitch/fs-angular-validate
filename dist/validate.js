@@ -35,7 +35,8 @@
             scope: {
                 onsubmit: '@?fsValidate',
                 autocomplete: '@',
-                instance: '=?fsInstance'
+                instance: '=?fsInstance',
+                message: '@fsMessage'
             },
 
            compile: function(tElem, tAttrs) {
@@ -71,8 +72,16 @@
                                         reset: reset,
                                       	validate: validate,
                                        	update: update,
-                                       	registerButton: registerButton },
+                                       	registerButton: registerButton,
+                                       	message: false },
                                        	submitButton = null;
+
+						if($scope.message!=='false') {
+                        	instance.message = $scope.message;
+                       		if($scope.message===undefined) {
+                        		instance.message = 'Changes not saved.  Please review errors highlighted in red.';
+                        	}
+                        }
 
                         form.$submitting = false;
                         form.$submited = false;
@@ -181,7 +190,10 @@
 	                                        el.focus();
 	                                    }
 
-	                                    fsAlert.error('Changes not saved.  Please review errors highlighted in red.',{ mode: 'toast' });
+	                                    if(instance.message) {
+	                                    	fsAlert.error(instance.message,{ mode: 'toast' });
+	                                    }
+
 	                                    resolve();
 	                                }
 
