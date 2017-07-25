@@ -174,7 +174,7 @@
 	                                        result = $scope.$parent.$eval($scope.onsubmit);
 
 	                                        if(angular.isObject(result) && result.then) {
-	                                            result.then(resolve);
+	                                            result.finally(resolve);
 	                                        }
 	                                    }
 
