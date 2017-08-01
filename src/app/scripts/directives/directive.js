@@ -1,5 +1,3 @@
-
-
 (function () {
     'use strict';
 
@@ -509,7 +507,12 @@
                                     var validatorFunction = validatorFunction = attr(input,validatorType);
                                     messages[validatorType] = attr(input,'validator-message') || '';
 
-                                    //Legacy custom namespace
+                                    var func = input.attr(validatorType).replace(/\(.*/,'');
+                                    if(input.scope()[func]) {
+                                    	scope = input.scope();
+                                    }
+
+                                    //Legacy 'custom' namespace
                                     if(validatorType=='custom' || validatorType=='custom-submit') {
 
 	                                    if(validatorType=='custom') {
@@ -576,7 +579,7 @@
 
 	                                            value = sanitizeValue(value,input);
 
-                                                // Only process a custom-submit validator when called from on('submit')
+                                                // Only process a submit validator when called from on('submit')
                                                 if(validatorType=='submit-validator' && !form.$submitting) {
                                                     return true;
                                                 }
@@ -765,7 +768,3 @@
         };
     });
 })();
-
-
-
-
