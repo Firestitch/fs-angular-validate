@@ -693,13 +693,13 @@
                                     var msgs = angular.element('<div>')
                                     					.addClass('ng-hide messages')
 														.attr('data-name',name)
-														.attr('ng-if',"(form.$submitted || form['" + attr(input,'name') + "'].$touched) && form['" + attr(input,'name') + "'].$invalid");
+														.attr('ng-show',"(form.$submitted || form['" + attr(input,'name') + "'].$touched) && form['" + attr(input,'name') + "'].$invalid");
 
                                     angular.forEach(messages,function(message,type) {
                                     	msgs.append(angular.element('<div>')
                                     					.addClass('ng-hide message')
                                     					.attr('data-type',type)
-                                    					.attr('ng-if',"form['" + attr(input,'name') + "'].$error['" + type + "']")
+                                    					.attr('ng-show',"form['" + attr(input,'name') + "'].$error['" + type + "']")
                                     					.append(message));
                                     });
 
