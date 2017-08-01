@@ -510,8 +510,6 @@
 
                                     var func = input.attr(validatorType).replace(/\(.*/,'');
                                     if(input.scope()[func]) {
-
-                                    	debugger;
                                     	scope = input.scope();
                                     }
 
