@@ -437,6 +437,7 @@
                                     message = $interpolate(message)({ min: attr(input,'min') });
 
                                     validators.min = angular.bind(this, function(min, value) {
+                                                                                min = parseFloat(min);
                                                                                 return !fsUtil.string(value).length || value>=min;
                                                                             },attr(input,'min'));
 
@@ -450,7 +451,8 @@
                                     message = $interpolate(message)({ max: attr(input,'max') });
 
                                     validators.max = angular.bind(this, function(max, value) {
-                                                                                return !fsUtil.string(value).length || value<max;
+                                                                                max = parseFloat(max);
+                                                                                return !fsUtil.string(value).length || value<=max;
                                                                             },attr(input,'max'));
 
                                     messages.max = message;
